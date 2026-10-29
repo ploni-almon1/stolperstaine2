@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Stolpersteine Mapa</title>
 
+  <!-- CSS Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
   
+  <!-- Naše CSS styly -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -48,9 +50,16 @@
     <a id="detail-link" href="#" target="_blank">Zobrazit plný profil →</a>
   </aside>
 
+  <!-- Mapové skripty Leafletu -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   
+  <!-- 🔥 Firebase Skripty (Verze 8 pro snadné použití) 🔥 -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <!-- Naše data a aplikace -->
+  <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
