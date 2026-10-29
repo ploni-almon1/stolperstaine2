@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Stolpersteine Mapa</title>
 
-  <!-- Odstraněny restriktivní SRI hashe pro bezproblémové načtení -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
@@ -15,22 +14,19 @@
 <body>
 
   <header id="app-header">
-    <h1>Stolpersteine</h1>
+    <h1>🪨 Stolpersteine</h1>
     <div class="controls">
       <label class="switch">
-        <!-- Zde jsem smazal slovo "checked" -->
         <input type="checkbox" id="toggle-cleaning" />
-        <span>Stav čištění</span>
-      </label>
-      <label class="switch">
-        <input type="checkbox" id="toggle-grayscale" />
-        <span>Černobílá</span>
+        <span>Stav čištění (Kytičky)</span>
       </label>
     </div>
   </header>
 
-  <div id="map"></div>
+  <!-- Mapa má ve výchozím stavu třídu pro černobílý režim -->
+  <div id="map" class="grayscale-mode"></div>
 
+  <!-- Detailní panel vyjíždějící zprava -->
   <aside id="detail-panel">
     <button id="close-detail">✕</button>
     <img id="detail-photo" src="" alt="Fotografie kamene" />
@@ -52,7 +48,6 @@
     <a id="detail-link" href="#" target="_blank">Zobrazit plný profil →</a>
   </aside>
 
-  <!-- Odstraněny restriktivní SRI hashe -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   
