@@ -73,11 +73,6 @@ body {
 .stone-icon.medium { background: #f39c12; }
 .stone-icon.recently-cleaned { background: #27ae60; }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.25); opacity: 0.7; }
-}
-
 /* Vlastní ikony vlevo nahoře (vrstvy a lokace) */
 .custom-leaflet-btn {
   display: flex !important;
