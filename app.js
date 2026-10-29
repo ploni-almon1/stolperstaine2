@@ -1,5 +1,5 @@
 // ==========================================
-// 1. DATA – Stolpersteiny Pardubice 
+// 1. DATA – Stolpersteiny Pardubice
 // ==========================================
 const stolpersteine = [
   { id: 1, name: "Pavel Bauer", address: "Perštýnské náměstí čp. 77, Pardubice", lat: 50.038056, lng: 15.778333, photo: "https://picsum.photos/seed/1/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
@@ -141,25 +141,43 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const markersGroup = L.markerClusterGroup();
 const cleaningGroup = L.layerGroup();
 
-// Tlačítko pro lokalizaci ve stylu Leafletu
-const LocateControl = L.Control.extend({
-  options: { position: 'topleft' },
+// --- Nový sdružený ovládací prvek (Vrstvy + Poloha) ---
+const CustomToolbar = L.Control.extend({
+  options: { position: 'topleft' }, // Bude to hned pod +/- přibližováním
   onAdd: function () {
     const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-    const link = L.DomUtil.create('a', 'leaflet-control-locate', container);
-    link.href = '#';
-    link.title = 'Moje poloha';
-    link.innerHTML = '🎯';
-    
-    L.DomEvent.disableClickPropagation(link);
-    L.DomEvent.on(link, 'click', (e) => {
+
+    // Tlačítko 1: Přepínač barevnosti (Vrstvy)
+    const btnLayers = L.DomUtil.create('a', 'custom-leaflet-btn', container);
+    btnLayers.href = '#';
+    btnLayers.title = 'Přepnout barevnou / černobílou mapu';
+    btnLayers.innerHTML = `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 12 12 17 22 12"></polyline><polyline points="2 17 12 22 22 17"></polyline></svg>`;
+
+    // Tlačítko 2: GPS poloha
+    const btnLocate = L.DomUtil.create('a', 'custom-leaflet-btn', container);
+    btnLocate.href = '#';
+    btnLocate.title = 'Moje poloha';
+    btnLocate.innerHTML = `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4" y1="12" x2="8" y2="12"></line><line x1="16" y1="12" x2="20" y2="12"></line></svg>`;
+
+    L.DomEvent.disableClickPropagation(container);
+
+    // Událost pro kliknutí na vrstvy
+    L.DomEvent.on(btnLayers, 'click', (e) => {
+      L.DomEvent.stop(e);
+      DOM.mapContainer.classList.toggle('grayscale-mode'); // Přepíná CSS třídu
+    });
+
+    // Událost pro kliknutí na lokaci
+    L.DomEvent.on(btnLocate, 'click', (e) => {
       L.DomEvent.stop(e);
       map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true });
     });
+
     return container;
   }
 });
-map.addControl(new LocateControl());
+map.addControl(new CustomToolbar());
+
 
 // ==========================================
 // 6. VYKRESLOVÁNÍ KAMENŮ
@@ -269,11 +287,7 @@ document.getElementById('cleaning-form').onsubmit = (e) => {
   renderMarkers(); 
 };
 
-document.getElementById('toggle-grayscale').onchange = (e) => {
-  DOM.mapContainer.classList.toggle('grayscale-mode', e.target.checked);
-};
-
-// Lokalizace GPS
+// Lokalizace GPS vykreslení na mapě
 let userLocationMarker = null;
 map.on('locationfound', (e) => {
   if (userLocationMarker) {
