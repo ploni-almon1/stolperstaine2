@@ -297,7 +297,7 @@ map.on('locationfound', (e) => {
       color: '#3498db', fillColor: '#3498db', fillOpacity: 1, radius: 8, weight: 3
     }).addTo(map);
   }
-  userLocationMarker.bindPopup("📍 Jste zde").openPopup();
+  userLocationMarker.bindPopup("Vaše aktuální poloha").openPopup();
 });
 
 map.on('locationerror', () => {
