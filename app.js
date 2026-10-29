@@ -100,7 +100,7 @@ function saveData(id, dateIso) {
 }
 
 // ==========================================
-// 4. LOGIKA BAREV PODLE MĚSÍCŮ (Jak jste chtěl)
+// 4. LOGIKA BAREV PODLE MĚSÍCŮ
 // ==========================================
 function formatCz(iso) {
   if (!iso) return '';
@@ -108,9 +108,8 @@ function formatCz(iso) {
   return `${parseInt(d)}. ${parseInt(m)}. ${y}`;
 }
 
-const FRESH_MONTHS = 4;   // Do 4 měsíců = zelená (recently-cleaned)
-const MEDIUM_MONTHS = 8;  // 4 až 8 měsíců = oranžová (medium)
-                          // Nad 8 měsíců nebo bez data = červená (needs-cleaning)
+const FRESH_MONTHS = 4;
+const MEDIUM_MONTHS = 8;
 
 function getCleaningStatus(dateStr) {
   if (!dateStr) return "needs-cleaning";
@@ -139,35 +138,35 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap'
 }).addTo(map);
 
-// Dvě různé skupiny - jedna dělá klastry (čísla), druhá ne
-const markersGroup = L.markerClusterGroup(); // Výchozí mód (shlukování)
-const cleaningGroup = L.layerGroup();        // Mód čištění (kytičky - bez shlukování)
+const markersGroup = L.markerClusterGroup();
+const cleaningGroup = L.layerGroup();
 
-// Tlačítko pro lokalizaci
+// Tlačítko pro lokalizaci ve stylu Leafletu
 const LocateControl = L.Control.extend({
   options: { position: 'topleft' },
   onAdd: function () {
-    const btn = L.DomUtil.create('button', 'locate-btn-custom leaflet-bar');
-    btn.type = 'button';
-    btn.innerHTML = '◎';
-    btn.title = 'Moje poloha';
-    L.DomEvent.disableClickPropagation(btn);
-    L.DomEvent.on(btn, 'click', (e) => {
+    const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+    const link = L.DomUtil.create('a', 'leaflet-control-locate', container);
+    link.href = '#';
+    link.title = 'Moje poloha';
+    link.innerHTML = '🎯';
+    
+    L.DomEvent.disableClickPropagation(link);
+    L.DomEvent.on(link, 'click', (e) => {
       L.DomEvent.stop(e);
       map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true });
     });
-    return btn;
+    return container;
   }
 });
 map.addControl(new LocateControl());
 
 // ==========================================
-// 6. VYKRESLOVÁNÍ KAMENŮ (Logika rozbalení)
+// 6. VYKRESLOVÁNÍ KAMENŮ
 // ==========================================
 function renderMarkers() {
   const isCleaningMode = DOM.toggleCleaning.checked;
 
-  // Vyčistíme obě vrstvy z mapy před novým vykreslením
   if (map.hasLayer(markersGroup)) map.removeLayer(markersGroup);
   if (map.hasLayer(cleaningGroup)) map.removeLayer(cleaningGroup);
   
@@ -175,28 +174,22 @@ function renderMarkers() {
   cleaningGroup.clearLayers();
 
   if (isCleaningMode) {
-    // ---- MÓD ČIŠTĚNÍ (Rozbalené kytičky) ----
     map.addLayer(cleaningGroup);
-
-    // Seskupíme kameny podle stejných souřadnic
     const groupsByCoords = {};
+    
     stolpersteine.forEach(stone => {
       const key = `${stone.lat},${stone.lng}`;
       if (!groupsByCoords[key]) groupsByCoords[key] = [];
       groupsByCoords[key].push(stone);
     });
 
-    // Projdeme všechny lokace
     Object.values(groupsByCoords).forEach(group => {
       const size = group.length;
-      
       group.forEach((stone, index) => {
-        let anchor = [9, 9]; // Výchozí střed pro 1 puntík
-        
-        // Pokud je na místě víc kamenů, matematicky je rozložíme do kroužku
+        let anchor = [9, 9];
         if (size > 1) {
           const angle = index * (2 * Math.PI / size);
-          const radius = 14; // vzdálenost od středu v pixelech (můžete upravit)
+          const radius = 14; 
           const offsetX = Math.cos(angle) * radius;
           const offsetY = Math.sin(angle) * radius;
           anchor = [9 - offsetX, 9 - offsetY];
@@ -217,9 +210,7 @@ function renderMarkers() {
     });
 
   } else {
-    // ---- NORMÁLNÍ MÓD (Shlukování do čísel) ----
     map.addLayer(markersGroup);
-
     stolpersteine.forEach(stone => {
       const statusClass = getCleaningStatus(stone.lastCleaned);
       const icon = L.divIcon({
@@ -235,12 +226,10 @@ function renderMarkers() {
   }
 }
 
-// Pokud uživatel překlikne tlačítko, překreslíme mapu (zapneme/vypneme kytičky)
 DOM.toggleCleaning.addEventListener('change', renderMarkers);
 
-
 // ==========================================
-// 7. OVLÁDÁNÍ A UDÁLOSTI (Detail, Formulář, Filtry)
+// 7. OVLÁDÁNÍ A UDÁLOSTI
 // ==========================================
 function openDetail(stone) {
   currentStone = stone;
@@ -277,17 +266,28 @@ document.getElementById('cleaning-form').onsubmit = (e) => {
   DOM.feedback.classList.remove('hidden');
   setTimeout(() => DOM.feedback.classList.add('hidden'), 2500);
 
-  renderMarkers(); // Překreslí barvy na mapě ihned po uložení
+  renderMarkers(); 
 };
 
 document.getElementById('toggle-grayscale').onchange = (e) => {
   DOM.mapContainer.classList.toggle('grayscale-mode', e.target.checked);
 };
 
+// Lokalizace GPS
+let userLocationMarker = null;
 map.on('locationfound', (e) => {
-  L.circleMarker(e.latlng, {
-    color: '#3498db', fillColor: '#3498db', fillOpacity: 1, radius: 8, weight: 3
-  }).addTo(map).bindPopup("📍 Jste zde").openPopup();
+  if (userLocationMarker) {
+    userLocationMarker.setLatLng(e.latlng);
+  } else {
+    userLocationMarker = L.circleMarker(e.latlng, {
+      color: '#3498db', fillColor: '#3498db', fillOpacity: 1, radius: 8, weight: 3
+    }).addTo(map);
+  }
+  userLocationMarker.bindPopup("📍 Jste zde").openPopup();
+});
+
+map.on('locationerror', () => {
+  alert("Polohu nelze zjistit. Zkontrolujte, zda máte zapnutou GPS a web běží na zabezpečeném připojení (HTTPS).");
 });
 
 // ==========================================
