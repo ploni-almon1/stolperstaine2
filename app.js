@@ -153,11 +153,11 @@ const CustomToolbar = L.Control.extend({
     btnLayers.title = 'Přepnout barevnou / černobílou mapu';
     btnLayers.innerHTML = `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 12 12 17 22 12"></polyline><polyline points="2 17 12 22 22 17"></polyline></svg>`;
 
-    // Tlačítko 2: GPS poloha
+   // Tlačítko 2: GPS poloha
     const btnLocate = L.DomUtil.create('a', 'custom-leaflet-btn', container);
     btnLocate.href = '#';
     btnLocate.title = 'Moje poloha';
-    btnLocate.innerHTML = `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4" y1="12" x2="8" y2="12"></line><line x1="16" y1="12" x2="20" y2="12"></line></svg>`;
+    btnLocate.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2" fill="currentColor"></circle><circle cx="12" cy="12" r="7"></circle><line x1="12" y1="1" x2="12" y2="5"></line><line x1="12" y1="19" x2="12" y2="23"></line><line x1="1" y1="12" x2="5" y2="12"></line><line x1="19" y1="12" x2="23" y2="12"></line></svg>`;
 
     L.DomEvent.disableClickPropagation(container);
 
