@@ -65,7 +65,7 @@ const stolpersteine = [
 ];
 
 // ==========================================
-// 2. CACHOVÁNÍ DOM ELEMENTŮ (Optimalizace výkonu)
+// 2. CACHOVÁNÍ DOM ELEMENTŮ A SETUP
 // ==========================================
 const DOM = {
   panel: document.getElementById('detail-panel'),
@@ -77,16 +77,15 @@ const DOM = {
   link: document.getElementById('detail-link'),
   dateInput: document.getElementById('cleaning-date'),
   feedback: document.getElementById('cleaning-feedback'),
-  mapContainer: document.getElementById('map')
+  mapContainer: document.getElementById('map'),
+  toggleCleaning: document.getElementById('toggle-cleaning')
 };
 
-// Nastavení maximálního data na dnešek (nedovolí zadat datum v budoucnosti)
 DOM.dateInput.max = new Date().toISOString().split("T")[0];
-
 let currentStone = null;
 
 // ==========================================
-// 3. LOKÁLNÍ ÚLOŽIŠTĚ (Aby data nezmizela po F5)
+// 3. LOKÁLNÍ ÚLOŽIŠTĚ (Data v prohlížeči)
 // ==========================================
 function loadSavedData() {
   const saved = JSON.parse(localStorage.getItem('stolpersteineData') || '{}');
@@ -101,7 +100,7 @@ function saveData(id, dateIso) {
 }
 
 // ==========================================
-// 4. POMOCNÉ FUNKCE PRO DATUM A STAV
+// 4. LOGIKA BAREV PODLE MĚSÍCŮ (Jak jste chtěl)
 // ==========================================
 function formatCz(iso) {
   if (!iso) return '';
@@ -109,8 +108,9 @@ function formatCz(iso) {
   return `${parseInt(d)}. ${parseInt(m)}. ${y}`;
 }
 
-const FRESH_MONTHS = 4;
-const MEDIUM_MONTHS = 8;
+const FRESH_MONTHS = 4;   // Do 4 měsíců = zelená (recently-cleaned)
+const MEDIUM_MONTHS = 8;  // 4 až 8 měsíců = oranžová (medium)
+                          // Nad 8 měsíců nebo bez data = červená (needs-cleaning)
 
 function getCleaningStatus(dateStr) {
   if (!dateStr) return "needs-cleaning";
@@ -119,7 +119,7 @@ function getCleaningStatus(dateStr) {
   const months = (now.getFullYear() - then.getFullYear()) * 12 + (now.getMonth() - then.getMonth());
   
   if (months < FRESH_MONTHS) return "recently-cleaned";
-  if (months < MEDIUM_MONTHS) return "medium"; /* Doporučuji přidat .medium třídu do CSS (např. oranžová) */
+  if (months < MEDIUM_MONTHS) return "medium"; 
   return "needs-cleaning";
 }
 
@@ -132,14 +132,16 @@ function getStatusText(dateStr) {
 }
 
 // ==========================================
-// 5. MAPA A VYKRESLOVÁNÍ
+// 5. MAPA A VRSTVY
 // ==========================================
 const map = L.map('map').setView([50.035, 15.775], 14);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap'
 }).addTo(map);
 
-const markersGroup = L.markerClusterGroup().addTo(map);
+// Dvě různé skupiny - jedna dělá klastry (čísla), druhá ne
+const markersGroup = L.markerClusterGroup(); // Výchozí mód (shlukování)
+const cleaningGroup = L.layerGroup();        // Mód čištění (kytičky - bez shlukování)
 
 // Tlačítko pro lokalizaci
 const LocateControl = L.Control.extend({
@@ -159,22 +161,86 @@ const LocateControl = L.Control.extend({
 });
 map.addControl(new LocateControl());
 
+// ==========================================
+// 6. VYKRESLOVÁNÍ KAMENŮ (Logika rozbalení)
+// ==========================================
 function renderMarkers() {
+  const isCleaningMode = DOM.toggleCleaning.checked;
+
+  // Vyčistíme obě vrstvy z mapy před novým vykreslením
+  if (map.hasLayer(markersGroup)) map.removeLayer(markersGroup);
+  if (map.hasLayer(cleaningGroup)) map.removeLayer(cleaningGroup);
+  
   markersGroup.clearLayers();
-  stolpersteine.forEach(stone => {
-    const statusClass = getCleaningStatus(stone.lastCleaned);
-    const icon = L.divIcon({
-      className: '',
-      html: `<div class="stone-icon ${statusClass}"></div>`,
-      iconSize: [18, 18],
-      iconAnchor: [9, 9]
+  cleaningGroup.clearLayers();
+
+  if (isCleaningMode) {
+    // ---- MÓD ČIŠTĚNÍ (Rozbalené kytičky) ----
+    map.addLayer(cleaningGroup);
+
+    // Seskupíme kameny podle stejných souřadnic
+    const groupsByCoords = {};
+    stolpersteine.forEach(stone => {
+      const key = `${stone.lat},${stone.lng}`;
+      if (!groupsByCoords[key]) groupsByCoords[key] = [];
+      groupsByCoords[key].push(stone);
     });
-    L.marker([stone.lat, stone.lng], { icon }).addTo(markersGroup).on('click', () => openDetail(stone));
-  });
+
+    // Projdeme všechny lokace
+    Object.values(groupsByCoords).forEach(group => {
+      const size = group.length;
+      
+      group.forEach((stone, index) => {
+        let anchor = [9, 9]; // Výchozí střed pro 1 puntík
+        
+        // Pokud je na místě víc kamenů, matematicky je rozložíme do kroužku
+        if (size > 1) {
+          const angle = index * (2 * Math.PI / size);
+          const radius = 14; // vzdálenost od středu v pixelech (můžete upravit)
+          const offsetX = Math.cos(angle) * radius;
+          const offsetY = Math.sin(angle) * radius;
+          anchor = [9 - offsetX, 9 - offsetY];
+        }
+
+        const statusClass = getCleaningStatus(stone.lastCleaned);
+        const icon = L.divIcon({
+          className: '',
+          html: `<div class="stone-icon ${statusClass}"></div>`,
+          iconSize: [18, 18],
+          iconAnchor: anchor
+        });
+
+        L.marker([stone.lat, stone.lng], { icon })
+          .addTo(cleaningGroup)
+          .on('click', () => openDetail(stone));
+      });
+    });
+
+  } else {
+    // ---- NORMÁLNÍ MÓD (Shlukování do čísel) ----
+    map.addLayer(markersGroup);
+
+    stolpersteine.forEach(stone => {
+      const statusClass = getCleaningStatus(stone.lastCleaned);
+      const icon = L.divIcon({
+        className: '',
+        html: `<div class="stone-icon ${statusClass}"></div>`,
+        iconSize: [18, 18],
+        iconAnchor: [9, 9]
+      });
+      L.marker([stone.lat, stone.lng], { icon })
+        .addTo(markersGroup)
+        .on('click', () => openDetail(stone));
+    });
+  }
 }
 
+// Pokud uživatel překlikne tlačítko, překreslíme mapu (zapneme/vypneme kytičky)
+DOM.toggleCleaning.addEventListener('change', renderMarkers);
+
+
 // ==========================================
-// 6. OVLÁDÁNÍ A UDÁLOSTI (Detail, Formulář, Filtry)
+// 7. OVLÁDÁNÍ A UDÁLOSTI (Detail, Formulář, Filtry)
 // ==========================================
 function openDetail(stone) {
   currentStone = stone;
@@ -203,7 +269,7 @@ document.getElementById('cleaning-form').onsubmit = (e) => {
 
   const iso = DOM.dateInput.value;
   currentStone.lastCleaned = iso;
-  saveData(currentStone.id, iso); // Uložíme do prohlížeče
+  saveData(currentStone.id, iso);
 
   DOM.cleaned.textContent = '🧹 ' + getStatusText(iso);
   DOM.feedback.textContent = '✓ Uloženo';
@@ -211,7 +277,7 @@ document.getElementById('cleaning-form').onsubmit = (e) => {
   DOM.feedback.classList.remove('hidden');
   setTimeout(() => DOM.feedback.classList.add('hidden'), 2500);
 
-  renderMarkers(); // Překreslí body na mapě novými barvami
+  renderMarkers(); // Překreslí barvy na mapě ihned po uložení
 };
 
 document.getElementById('toggle-grayscale').onchange = (e) => {
