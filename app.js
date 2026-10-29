@@ -1,5 +1,5 @@
 // ==========================================
-// 1. DATA – Stolpersteiny Pardubice
+// 1. DATA – Stolpersteiny Pardubice 
 // ==========================================
 const stolpersteine = [
   { id: 1, name: "Pavel Bauer", address: "Perštýnské náměstí čp. 77, Pardubice", lat: 50.038056, lng: 15.778333, photo: "https://picsum.photos/seed/1/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
