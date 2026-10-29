@@ -27,40 +27,41 @@ body {
 .switch { display: flex; align-items: center; gap: 6px; cursor: pointer; }
 .switch input { cursor: pointer; accent-color: #d4af37; }
 
-/* Kontejner mapy - musí mít výšku, jinak se nezobrazí */
+/* Kontejner mapy */
 #map { flex: 1; width: 100%; z-index: 1; }
 
-/* Černobílý režim aplikovaný čistě a výkonně přes nadřazenou třídu na kontejneru mapy */
+/* Černobílý režim */
 #map.grayscale-mode .leaflet-tile-pane {
   filter: grayscale(100%) contrast(110%);
 }
 
-/* Vysouvací panel s detailem */
+/* Výsuvný panel zprava */
 #detail-panel {
   position: fixed;
-  bottom: 0; left: 0; right: 0;
-  max-height: 60vh;
+  top: 0; right: 0; bottom: 0; /* Roztažení na plnou výšku */
+  width: 100%; max-width: 400px; /* Na PC max 400px, na mobilu 100% */
   overflow-y: auto;
   background: #1a1a1a;
-  border-top: 3px solid #d4af37;
+  border-left: 3px solid #d4af37; /* Rámeček přesunut doleva */
   padding: 20px;
+  padding-top: 50px; /* Místo pro zavírací tlačítko */
   z-index: 2000;
-  transform: translateY(100%); /* Ve výchozím stavu schováno dole */
+  transform: translateX(100%); /* Ve výchozím stavu schováno vpravo */
   transition: transform 0.3s ease;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
+  box-shadow: -4px 0 20px rgba(0,0,0,0.6);
 }
 
-#detail-panel.active { transform: translateY(0); } /* Třída pro vysunutí */
+#detail-panel.active { transform: translateX(0); } /* Vyjetí panelu */
 
 #close-detail {
-  position: absolute; top: 10px; right: 10px;
+  position: absolute; top: 15px; right: 15px;
   background: transparent; border: none; color: #f0f0f0;
-  font-size: 1.2rem; cursor: pointer;
+  font-size: 1.4rem; cursor: pointer;
 }
 
-#detail-panel img { max-width: 200px; border-radius: 6px; margin-bottom: 12px; border: 1px solid #333; }
+#detail-panel img { max-width: 100%; border-radius: 6px; margin-bottom: 12px; border: 1px solid #333; }
 #detail-panel h2 { font-size: 1.2rem; color: #d4af37; margin-bottom: 8px; }
-#detail-panel p { font-size: 0.9rem; margin-bottom: 8px; color: #ccc; }
+#detail-panel p { font-size: 0.9rem; margin-bottom: 8px; color: #ccc; line-height: 1.4; }
 #detail-panel a { color: #d4af37; font-weight: 600; text-decoration: none; display: block; margin-top: 12px; }
 
 /* Ikony na mapě (tečky) */
@@ -68,49 +69,47 @@ body {
   background: #d4af37; border: 2px solid #fff; border-radius: 50%;
   width: 18px !important; height: 18px !important; box-shadow: 0 0 6px rgba(0,0,0,0.5);
 }
-.stone-icon.needs-cleaning { background: #e74c3c; animation: pulse 2s infinite; } /* Červená - vyžaduje pozornost */
-.stone-icon.medium { background: #f39c12; } /* Oranžová - středně staré čištění */
-.stone-icon.recently-cleaned { background: #27ae60; } /* Zelená - čerstvě očištěno */
+.stone-icon.needs-cleaning { background: #e74c3c; animation: pulse 2s infinite; }
+.stone-icon.medium { background: #f39c12; }
+.stone-icon.recently-cleaned { background: #27ae60; }
 
 @keyframes pulse {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.25); opacity: 0.7; }
 }
 
-/* Tlačítko pro zjištění polohy začleněné do Leaflet designu */
-.leaflet-control-locate {
+/* Vlastní ikony vlevo nahoře (vrstvy a lokace) */
+.custom-leaflet-btn {
   display: flex !important;
   justify-content: center;
   align-items: center;
-  font-size: 1.1rem;
-  text-decoration: none;
-  color: #333 !important;
+  color: #333 !important; /* Barva ikonek jako nativní zoom */
+  background: #fff;
+}
+.custom-leaflet-btn:hover { background: #f4f4f4; }
+.custom-leaflet-btn svg { width: 16px; height: 16px; }
+
+/* Skrýt lištu s polohou, když je panel roztažen na celý mobil (aby nepřekážela) */
+@media (max-width: 400px) {
+  body.panel-open .leaflet-control-container { display: none; }
 }
 
-/* Skryje tlačítko polohy, když je otevřený panel s detailem (aby nepřekáželo) */
-body.panel-open .leaflet-control-locate {
-  display: none !important;
-}
-
-/* Formulář pro čištění */
-#cleaning-form { margin-top: 16px; padding-top: 16px; border-top: 1px solid #333; }
+/* Formulář */
+#cleaning-form { margin-top: 20px; padding-top: 16px; border-top: 1px solid #333; }
 #cleaning-form h3 { font-size: 0.95rem; color: #d4af37; margin-bottom: 10px; }
 .form-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.form-row label { font-size: 0.85rem; color: #aaa; min-width: 90px; }
+.form-row label { font-size: 0.85rem; color: #aaa; min-width: 60px; }
 .form-row input {
   flex: 1; padding: 8px; background: #0f0f0f; border: 1px solid #333;
   border-radius: 6px; color: #f0f0f0;
 }
 .form-row input.invalid { border-color: #e74c3c; background: #1f1010; }
 
-/* Upravené styly specificky pro datumový vstup */
-input[type="date"] {
-  color-scheme: dark; /* Aby se kalendář v prohlížeči zobrazil v tmavém motivu */
-}
+input[type="date"] { color-scheme: dark; }
 
 #cleaning-submit {
   margin-top: 6px; padding: 9px 20px; background: #d4af37; color: #111;
-  border: none; border-radius: 6px; font-weight: 700; cursor: pointer;
+  border: none; border-radius: 6px; font-weight: 700; cursor: pointer; width: 100%;
 }
-.feedback { margin-left: 12px; font-size: 0.85rem; font-weight: 600; }
+.feedback { margin-top: 8px; font-size: 0.85rem; font-weight: 600; display: block; text-align: center; }
 .feedback.hidden { display: none; }
