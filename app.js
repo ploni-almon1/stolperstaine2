@@ -1,8 +1,71 @@
-// Data zůstávají stejná (pole stolpersteine)...
-// Do pole stolpersteine doporučuji jen smazat prázdný lastCleaned a nechat načítání z LocalStorage.
+// ==========================================
+// 1. DATA – Stolpersteiny Pardubice
+// ==========================================
+const stolpersteine = [
+  { id: 1, name: "Pavel Bauer", address: "Perštýnské náměstí čp. 77, Pardubice", lat: 50.038056, lng: 15.778333, photo: "https://picsum.photos/seed/1/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 2, name: "Augusta Bauerová (roz. Österreicherová)", address: "Perštýnské náměstí čp. 77, Pardubice", lat: 50.038056, lng: 15.778333, photo: "https://picsum.photos/seed/2/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 3, name: "Barbora Fischerová (roz. Herrmannová)", address: "Smilova čp. 401, Pardubice", lat: 50.033889, lng: 15.769444, photo: "https://picsum.photos/seed/3/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 4, name: "Eduard Freund", address: "Karla IV. čp. 13, Pardubice", lat: 50.036944, lng: 15.779444, photo: "https://picsum.photos/seed/4/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 5, name: "Eugen Freund", address: "Karla IV. čp. 13, Pardubice", lat: 50.036944, lng: 15.779444, photo: "https://picsum.photos/seed/5/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 6, name: "Emilie Freundová (roz. Kleinová)", address: "Karla IV. čp. 13, Pardubice", lat: 50.036944, lng: 15.779444, photo: "https://picsum.photos/seed/6/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 7, name: "Otto Freund", address: "Nerudova čp. 894, Pardubice", lat: 50.037500, lng: 15.775000, photo: "https://picsum.photos/seed/7/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 8, name: "Rudolf Freund", address: "Nerudova čp. 894, Pardubice", lat: 50.037500, lng: 15.775000, photo: "https://picsum.photos/seed/8/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 9, name: "Anna Freundová (roz. Hönigsfeldová)", address: "Nerudova čp. 894, Pardubice", lat: 50.037500, lng: 15.775000, photo: "https://picsum.photos/seed/9/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 10, name: "Elsa Freundová (roz. Kafková)", address: "Nerudova čp. 894, Pardubice", lat: 50.037500, lng: 15.775000, photo: "https://picsum.photos/seed/10/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 11, name: "Ilona Freundová", address: "Nerudova čp. 894, Pardubice", lat: 50.037500, lng: 15.775000, photo: "https://picsum.photos/seed/11/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 12, name: "Nora Lea Freundová", address: "Nerudova čp. 894, Pardubice", lat: 50.037500, lng: 15.775000, photo: "https://picsum.photos/seed/12/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 13, name: "Leo Fürnberg", address: "Teplého čp. 1598, Pardubice", lat: 50.027222, lng: 15.767778, photo: "https://picsum.photos/seed/13/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 14, name: "Kurt Fürnberg", address: "Teplého čp. 1598, Pardubice", lat: 50.027222, lng: 15.767778, photo: "https://picsum.photos/seed/14/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 15, name: "Pavla Fürnbergová (roz. Hauserová)", address: "Teplého čp. 1598, Pardubice", lat: 50.027222, lng: 15.767778, photo: "https://picsum.photos/seed/15/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 16, name: "Rudolf Gottlieb", address: "Perštýnské náměstí čp. 4, Pardubice", lat: 50.038889, lng: 15.779167, photo: "https://picsum.photos/seed/16/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 17, name: "Hana Gottliebová (roz. Adlerová)", address: "Perštýnské náměstí čp. 4, Pardubice", lat: 50.038889, lng: 15.779167, photo: "https://picsum.photos/seed/17/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 18, name: "Marie Hesová (roz. Kafková)", address: "Škroupova čp. 736, Pardubice", lat: 50.034722, lng: 15.787778, photo: "https://picsum.photos/seed/18/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 19, name: "Alfréd Hoch", address: "Štrossova čp. 44, Pardubice", lat: 50.037778, lng: 15.787222, photo: "https://picsum.photos/seed/19/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 20, name: "Cecilie Hochová (roz. Munková)", address: "Štrossova čp. 44, Pardubice", lat: 50.037778, lng: 15.787222, photo: "https://picsum.photos/seed/20/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 21, name: "Rudolf Kafka", address: "Nerudova čp. 894, Pardubice", lat: 50.037500, lng: 15.775000, photo: "https://picsum.photos/seed/21/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 22, name: "Gabriela Kafková (roz. Winklerová)", address: "Nerudova čp. 894, Pardubice", lat: 50.037500, lng: 15.775000, photo: "https://picsum.photos/seed/22/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 23, name: "Richard Kačer", address: "Polská čp. 529, Pardubice", lat: 50.037778, lng: 15.783889, photo: "https://picsum.photos/seed/23/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 24, name: "Ida Kačerová (roz. Fleischnerová)", address: "Polská čp. 529, Pardubice", lat: 50.037778, lng: 15.783889, photo: "https://picsum.photos/seed/24/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 25, name: "Helena Kačerová", address: "Polská čp. 529, Pardubice", lat: 50.037778, lng: 15.783889, photo: "https://picsum.photos/seed/25/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 26, name: "Lev Kaufmann", address: "Smetanovo náměstí čp. 46, Pardubice", lat: 50.036944, lng: 15.779167, photo: "https://picsum.photos/seed/26/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 27, name: "Otto Klepetář", address: "Perštýnské náměstí čp. 48, Pardubice", lat: 50.038889, lng: 15.780000, photo: "https://picsum.photos/seed/27/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 28, name: "Jiří Kraus", address: "Hronovická čp. 1470, Pardubice", lat: 50.034167, lng: 15.775833, photo: "https://picsum.photos/seed/28/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 29, name: "Karel Munk", address: "Palackého třída čp. 217, Pardubice", lat: 50.032778, lng: 15.758056, photo: "https://picsum.photos/seed/29/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 30, name: "Vladimír Munk", address: "Palackého třída čp. 217, Pardubice", lat: 50.032778, lng: 15.758056, photo: "https://picsum.photos/seed/30/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 31, name: "Hermína Munková (roz. Gešmayová)", address: "Palackého třída čp. 217, Pardubice", lat: 50.032778, lng: 15.758056, photo: "https://picsum.photos/seed/31/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 32, name: "Pavel Österreicher", address: "Perštýnské náměstí čp. 77, Pardubice", lat: 50.038056, lng: 15.778333, photo: "https://picsum.photos/seed/32/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 33, name: "Benno Österreicher", address: "Perštýnské náměstí čp. 77, Pardubice", lat: 50.038056, lng: 15.778333, photo: "https://picsum.photos/seed/33/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 34, name: "Leokadie Österreicherová (roz. Freundová)", address: "Perštýnské náměstí čp. 77, Pardubice", lat: 50.038056, lng: 15.778333, photo: "https://picsum.photos/seed/34/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 35, name: "Markéta Österreicherová", address: "Perštýnské náměstí čp. 77, Pardubice", lat: 50.038056, lng: 15.778333, photo: "https://picsum.photos/seed/35/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 36, name: "Berta Österreicherová (roz. Friedmannová)", address: "Perštýnské náměstí čp. 77, Pardubice", lat: 50.038056, lng: 15.778333, photo: "https://picsum.photos/seed/36/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 37, name: "Emil Pick", address: "Hronovická čp. 1470, Pardubice", lat: 50.034167, lng: 15.775833, photo: "https://picsum.photos/seed/37/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 38, name: "Jana Picková (roz. Beerová)", address: "Hronovická čp. 1470, Pardubice", lat: 50.034167, lng: 15.775833, photo: "https://picsum.photos/seed/38/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 39, name: "Oskar Pick", address: "K Višňovce čp. 1751, Pardubice", lat: 50.026389, lng: 15.771667, photo: "https://picsum.photos/seed/39/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 40, name: "Irena Picková (roz. Růžičková)", address: "K Višňovce čp. 1751, Pardubice", lat: 50.026389, lng: 15.771667, photo: "https://picsum.photos/seed/40/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 41, name: "Petr Ptačovský", address: "Perštýnské náměstí čp. 79, Pardubice", lat: 50.038333, lng: 15.778056, photo: "https://picsum.photos/seed/41/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 42, name: "Lily Ptačovská (roz. Picková)", address: "Perštýnské náměstí čp. 79, Pardubice", lat: 50.038333, lng: 15.778056, photo: "https://picsum.photos/seed/42/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 43, name: "Berta Roštejnská (roz. Katzová)", address: "Pernerova čp. 1868, Pardubice", lat: 50.038333, lng: 15.771389, photo: "https://picsum.photos/seed/43/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 44, name: "Jaroslav Seiner", address: "Smilova čp. 401, Pardubice", lat: 50.033889, lng: 15.769444, photo: "https://picsum.photos/seed/44/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 45, name: "Kamila Seinerová (roz. Fischerová)", address: "Smilova čp. 401, Pardubice", lat: 50.033889, lng: 15.769444, photo: "https://picsum.photos/seed/45/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 46, name: "Eva Seinerová", address: "Smilova čp. 401, Pardubice", lat: 50.033889, lng: 15.769444, photo: "https://picsum.photos/seed/46/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 47, name: "Ivan Seiner", address: "Smilova čp. 401, Pardubice", lat: 50.033889, lng: 15.769444, photo: "https://picsum.photos/seed/47/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 48, name: "Oskar Singer", address: "Havlíčkova čp. 1040, Pardubice", lat: 50.032778, lng: 15.766667, photo: "https://picsum.photos/seed/48/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 49, name: "Bedřiška Singerová (roz. Winterová)", address: "Havlíčkova čp. 1040, Pardubice", lat: 50.032778, lng: 15.766667, photo: "https://picsum.photos/seed/49/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 50, name: "Helena Singerová", address: "Havlíčkova čp. 1040, Pardubice", lat: 50.032778, lng: 15.766667, photo: "https://picsum.photos/seed/50/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 51, name: "Hana Singerová", address: "Havlíčkova čp. 1040, Pardubice", lat: 50.032778, lng: 15.766667, photo: "https://picsum.photos/seed/51/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 52, name: "Mariana Steinerová (roz. Goldschmiedová)", address: "Smetanovo náměstí čp. 46, Pardubice", lat: 50.036944, lng: 15.779167, photo: "https://picsum.photos/seed/52/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 53, name: "Rudolf Weiner", address: "Perštýnské náměstí čp. 79, Pardubice", lat: 50.038333, lng: 15.778056, photo: "https://picsum.photos/seed/53/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 54, name: "Růžena Weinerová (roz. Jelínková)", address: "Perštýnské náměstí čp. 79, Pardubice", lat: 50.038333, lng: 15.778056, photo: "https://picsum.photos/seed/54/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 55, name: "Helena Weinerová", address: "Perštýnské náměstí čp. 79, Pardubice", lat: 50.038333, lng: 15.778056, photo: "https://picsum.photos/seed/55/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 56, name: "Pavel Winternitz", address: "Smetanovo náměstí čp. 46, Pardubice", lat: 50.036944, lng: 15.779167, photo: "https://picsum.photos/seed/56/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 57, name: "Olga Winternitzová", address: "Smilova čp. 337, Pardubice", lat: 50.034167, lng: 15.771944, photo: "https://picsum.photos/seed/57/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 58, name: "Karel Winternitz", address: "Smilova čp. 337, Pardubice", lat: 50.034167, lng: 15.771944, photo: "https://picsum.photos/seed/58/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 59, name: "František Winternitz", address: "Smilova čp. 337, Pardubice", lat: 50.034167, lng: 15.771944, photo: "https://picsum.photos/seed/59/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" },
+  { id: 60, name: "Markéta Zenkerová (roz. Nadelfestová)", address: "Perštýnské náměstí čp. 77, Pardubice", lat: 50.038056, lng: 15.778333, photo: "https://picsum.photos/seed/60/200/150", bio: "Zde budou informace o osobě.", link: "#", lastCleaned: "" }
+];
 
 // ==========================================
-// CACHOVÁNÍ DOM ELEMENTŮ (Optimalizace výkonu)
+// 2. CACHOVÁNÍ DOM ELEMENTŮ (Optimalizace výkonu)
 // ==========================================
 const DOM = {
   panel: document.getElementById('detail-panel'),
@@ -17,13 +80,13 @@ const DOM = {
   mapContainer: document.getElementById('map')
 };
 
-// Nastavení maximálního data na dnešek
+// Nastavení maximálního data na dnešek (nedovolí zadat datum v budoucnosti)
 DOM.dateInput.max = new Date().toISOString().split("T")[0];
 
 let currentStone = null;
 
 // ==========================================
-// LOKÁLNÍ ÚLOŽIŠTĚ (Aby data nezmizela po F5)
+// 3. LOKÁLNÍ ÚLOŽIŠTĚ (Aby data nezmizela po F5)
 // ==========================================
 function loadSavedData() {
   const saved = JSON.parse(localStorage.getItem('stolpersteineData') || '{}');
@@ -38,7 +101,7 @@ function saveData(id, dateIso) {
 }
 
 // ==========================================
-// POMOCNÉ FUNKCE
+// 4. POMOCNÉ FUNKCE PRO DATUM A STAV
 // ==========================================
 function formatCz(iso) {
   if (!iso) return '';
@@ -56,7 +119,7 @@ function getCleaningStatus(dateStr) {
   const months = (now.getFullYear() - then.getFullYear()) * 12 + (now.getMonth() - then.getMonth());
   
   if (months < FRESH_MONTHS) return "recently-cleaned";
-  if (months < MEDIUM_MONTHS) return "medium"; /* Přidat .medium do CSS, např. oranžová */
+  if (months < MEDIUM_MONTHS) return "medium"; /* Doporučuji přidat .medium třídu do CSS (např. oranžová) */
   return "needs-cleaning";
 }
 
@@ -69,7 +132,7 @@ function getStatusText(dateStr) {
 }
 
 // ==========================================
-// MAPA A VYKRESLOVÁNÍ
+// 5. MAPA A VYKRESLOVÁNÍ
 // ==========================================
 const map = L.map('map').setView([50.035, 15.775], 14);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -78,6 +141,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 const markersGroup = L.markerClusterGroup().addTo(map);
 
+// Tlačítko pro lokalizaci
 const LocateControl = L.Control.extend({
   options: { position: 'topleft' },
   onAdd: function () {
@@ -110,7 +174,7 @@ function renderMarkers() {
 }
 
 // ==========================================
-// OVLÁDÁNÍ A UDÁLOSTI
+// 6. OVLÁDÁNÍ A UDÁLOSTI (Detail, Formulář, Filtry)
 // ==========================================
 function openDetail(stone) {
   currentStone = stone;
@@ -147,7 +211,7 @@ document.getElementById('cleaning-form').onsubmit = (e) => {
   DOM.feedback.classList.remove('hidden');
   setTimeout(() => DOM.feedback.classList.add('hidden'), 2500);
 
-  renderMarkers();
+  renderMarkers(); // Překreslí body na mapě novými barvami
 };
 
 document.getElementById('toggle-grayscale').onchange = (e) => {
@@ -160,6 +224,8 @@ map.on('locationfound', (e) => {
   }).addTo(map).bindPopup("📍 Jste zde").openPopup();
 });
 
-// Inicializace
+// ==========================================
+// START APLIKACE
+// ==========================================
 loadSavedData();
 renderMarkers();
