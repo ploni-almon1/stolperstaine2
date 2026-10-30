@@ -41,33 +41,37 @@ let currentStone = null;
 // 3. NAČÍTÁNÍ DAT Z DATABÁZE V REÁLNÉM ČASE
 // ==========================================
 function loadSavedData() {
-  // onSnapshot neustále naslouchá databázi. Když někdo jiný uloží čištění,
-  // tento blok se automaticky spustí u všech ostatních a mapa se přebarví!
   db.collection("kameny").onSnapshot((querySnapshot) => {
     appStones = [];
+    const dbIds = new Set(); // Množina už existujících ID v databázi
+    
     querySnapshot.forEach((doc) => {
       appStones.push(doc.data());
+      dbIds.add(Number(doc.id)); // Uložíme si ID, která už v databázi jsou
     });
 
-    // AUTO-IMPORT: Pokud je databáze prázdná, nahrajeme do ní data z data.js
-    if (appStones.length === 0 && typeof stolpersteine !== 'undefined' && stolpersteine.length > 0) {
-      console.log("Nahrávám počáteční data do Firebase...");
+    // CHYTRÝ AUTO-IMPORT: Porovná data.js s databází
+    if (typeof stolpersteine !== 'undefined' && stolpersteine.length > 0) {
       stolpersteine.forEach(stone => {
-        // ID kamene použijeme jako ID dokumentu v databázi
-        db.collection("kameny").doc(String(stone.id)).set(stone);
+        // Pokud kámen z data.js v databázi chybí, nahrajeme ho
+        if (!dbIds.has(stone.id)) {
+          console.log("Přidávám do databáze nový kámen: ", stone.name);
+          db.collection("kameny").doc(String(stone.id)).set(stone);
+        }
       });
-    } else {
-      // Vykreslíme mapu s čerstvými daty z internetu
-      renderMarkers();
-    }
+    } 
+    
+    // Vykreslíme mapu s čerstvými daty
+    renderMarkers();
   });
 }
 
 // Odeslání nového data čištění na server
 function saveData(id, dateIso) {
-  db.collection("kameny").doc(String(id)).update({
+  // Použijeme set s merge: true, což je bezpečnější než update
+  db.collection("kameny").doc(String(id)).set({
     lastCleaned: dateIso
-  }).catch(error => {
+  }, { merge: true }).catch(error => {
     console.error("Chyba při ukládání do DB: ", error);
     alert("Chyba při ukládání. Zkontrolujte připojení k internetu.");
   });
@@ -148,7 +152,6 @@ const CustomToolbar = L.Control.extend({
 });
 map.addControl(new CustomToolbar());
 
-
 // ==========================================
 // 6. VYKRESLOVÁNÍ KAMENŮ
 // ==========================================
@@ -165,7 +168,6 @@ function renderMarkers() {
     map.addLayer(cleaningGroup);
     const groupsByCoords = {};
     
-    // Používáme appStones načtené z Firebase!
     appStones.forEach(stone => {
       const key = `${stone.lat},${stone.lng}`;
       if (!groupsByCoords[key]) groupsByCoords[key] = [];
@@ -201,7 +203,6 @@ function renderMarkers() {
   } else {
     map.addLayer(markersGroup);
     
-    // Používáme appStones načtené z Firebase!
     appStones.forEach(stone => {
       const statusClass = getCleaningStatus(stone.lastCleaned);
       const icon = L.divIcon({
@@ -224,7 +225,7 @@ DOM.toggleCleaning.addEventListener('change', renderMarkers);
 // ==========================================
 function openDetail(stone) {
   currentStone = stone;
-  DOM.photo.src = stone.photo || ""; // Zobrazí fotku z Firebase
+  DOM.photo.src = stone.photo || "";
   DOM.name.textContent = stone.name;
   DOM.address.textContent = '📍 ' + stone.address;
   DOM.bio.textContent = stone.bio;
@@ -248,7 +249,6 @@ document.getElementById('cleaning-form').onsubmit = (e) => {
   if (!currentStone || !DOM.dateInput.value) return;
 
   const iso = DOM.dateInput.value;
-  // Odeslání na server Firebase
   saveData(currentStone.id, iso);
 
   DOM.cleaned.textContent = '🧹 ' + getStatusText(iso);
@@ -256,9 +256,6 @@ document.getElementById('cleaning-form').onsubmit = (e) => {
   DOM.feedback.style.color = '#27ae60';
   DOM.feedback.classList.remove('hidden');
   setTimeout(() => DOM.feedback.classList.add('hidden'), 2500);
-
-  // Poznámka: Zde už nemusíme volat renderMarkers(), protože ho automaticky
-  // zavolá Firebase "onSnapshot", jakmile dorazí potvrzení o uložení ze serveru!
 };
 
 // Lokalizace GPS vykreslení na mapě
@@ -281,5 +278,4 @@ map.on('locationerror', () => {
 // ==========================================
 // START APLIKACE
 // ==========================================
-// Spustíme načítání z Firebase
 loadSavedData();
