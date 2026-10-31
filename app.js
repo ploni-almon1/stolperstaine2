@@ -35,7 +35,7 @@ DOM.dateInput.max = new Date().toISOString().split("T")[0];
 let currentStone = null;
 
 // ==========================================
-// 2. NAČÍTÁNÍ DAT (FIREBASE + AUTO-IMPORT)
+// 2. NAČÍTÁNÍ DAT
 // ==========================================
 function loadSavedData() {
   db.collection("kameny").onSnapshot((querySnapshot) => {
@@ -88,9 +88,9 @@ function getCleaningStatus(dateStr) {
 }
 
 // ==========================================
-// 4. MAPA, KONTROLY A VRSTVY
+// 4. MAPA A KONTROLY
 // ==========================================
-const map = L.map('map', { zoomControl: false }).setView([49.5937, 17.2508], 14);
+const map = L.map('map', { zoomControl: false }).setView([50.035, 15.775], 14);
 
 L.control.zoom({ position: 'topleft' }).addTo(map);
 
@@ -204,18 +204,10 @@ DOM.btnStav.addEventListener('click', () => {
 });
 
 // ==========================================
-// 6. UDÁLOSTI PANELŮ A HAMBURGER MENU
+// 6. UDÁLOSTI A MENU
 // ==========================================
-
-// Přepínání mobilního menu
-DOM.hamburgerBtn.addEventListener('click', () => {
-  DOM.mobileMenu.classList.toggle('open');
-});
-
-// Skrytí mobilního menu při kliknutí jinam na mapu
-map.on('click', () => {
-  DOM.mobileMenu.classList.remove('open');
-});
+DOM.hamburgerBtn.addEventListener('click', () => DOM.mobileMenu.classList.toggle('open'));
+map.on('click', () => DOM.mobileMenu.classList.remove('open'));
 
 function openDetail(stone) {
   currentStone = stone;
@@ -248,15 +240,8 @@ document.getElementById('cleaning-form').onsubmit = (e) => {
 
 let userLocationMarker = null;
 map.on('locationfound', (e) => {
-  if (userLocationMarker) {
-    userLocationMarker.setLatLng(e.latlng);
-  } else {
-    userLocationMarker = L.circleMarker(e.latlng, {
-      color: '#3498db', fillColor: '#3498db', fillOpacity: 1, radius: 8, weight: 3
-    }).addTo(map);
-  }
+  if (userLocationMarker) userLocationMarker.setLatLng(e.latlng);
+  else userLocationMarker = L.circleMarker(e.latlng, { color: '#3498db', fillColor: '#3498db', fillOpacity: 1, radius: 8, weight: 3 }).addTo(map);
 });
-map.on('locationerror', () => alert("Nelze zjistit polohu."));
 
-// Spuštění
 loadSavedData();
