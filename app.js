@@ -26,7 +26,9 @@ const DOM = {
   dateInput: document.getElementById('cleaning-date'),
   feedback: document.getElementById('cleaning-feedback'),
   btnStav: document.getElementById('btn-stav'),
-  mapContainer: document.getElementById('map')
+  mapContainer: document.getElementById('map'),
+  hamburgerBtn: document.getElementById('hamburger-btn'),
+  mobileMenu: document.getElementById('mobile-menu')
 };
 
 DOM.dateInput.max = new Date().toISOString().split("T")[0];
@@ -88,10 +90,8 @@ function getCleaningStatus(dateStr) {
 // ==========================================
 // 4. MAPA, KONTROLY A VRSTVY
 // ==========================================
-// Nastavení mapy s vypnutým defaultním zoomem, abychom ho mohli vložit stylově
 const map = L.map('map', { zoomControl: false }).setView([49.5937, 17.2508], 14);
 
-// Přidání zoomu (bude mít naše kulaté CSS styly)
 L.control.zoom({ position: 'topleft' }).addTo(map);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -101,19 +101,16 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const markersGroup = L.markerClusterGroup();
 const cleaningGroup = L.layerGroup();
 
-// Náš vlastní ovládací panel (Vrstvy a Terč) vlevo
 const CustomToolbar = L.Control.extend({
   options: { position: 'topleft' },
   onAdd: function () {
     const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control custom-leaflet-buttons');
 
-    // Tlačítko vrstvy (černobílá/barva)
     const btnLayers = L.DomUtil.create('a', '', container);
     btnLayers.href = '#';
     btnLayers.title = 'Přepnout barvu podkladu';
     btnLayers.innerHTML = '<i class="fas fa-layer-group"></i>';
 
-    // Tlačítko GPS
     const btnLocate = L.DomUtil.create('a', '', container);
     btnLocate.href = '#';
     btnLocate.title = 'Moje poloha';
@@ -121,7 +118,6 @@ const CustomToolbar = L.Control.extend({
 
     L.DomEvent.disableClickPropagation(container);
 
-    // Přepínání třídy grayscale-tiles na mapě
     L.DomEvent.on(btnLayers, 'click', (e) => {
       L.DomEvent.stop(e);
       DOM.mapContainer.classList.toggle('grayscale-tiles');
@@ -208,8 +204,19 @@ DOM.btnStav.addEventListener('click', () => {
 });
 
 // ==========================================
-// 6. UDÁLOSTI PANELU A LOKALIZACE
+// 6. UDÁLOSTI PANELŮ A HAMBURGER MENU
 // ==========================================
+
+// Přepínání mobilního menu
+DOM.hamburgerBtn.addEventListener('click', () => {
+  DOM.mobileMenu.classList.toggle('open');
+});
+
+// Skrytí mobilního menu při kliknutí jinam na mapu
+map.on('click', () => {
+  DOM.mobileMenu.classList.remove('open');
+});
+
 function openDetail(stone) {
   currentStone = stone;
   DOM.photo.src = stone.photo || "";
