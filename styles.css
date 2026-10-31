@@ -1,110 +1,138 @@
-/* Základní reset */
-* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  /* ZDE SE CENTRÁLNĚ MĚNÍ HLAVNÍ BARVA APLIKACE */
+  --hlavni-barva: #f1c40f; 
+  --hlavni-okraj: #222222;
+}
 
-body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
   overflow: hidden;
-  background: #111;
-  color: #f0f0f0;
 }
 
-/* Hlavička */
-#app-header {
-  padding: 10px 16px;
-  background: #1a1a1a;
-  border-bottom: 1px solid #333;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------------- */
+/* TLAČÍTKO "STAV" (vznášející se nad mapou) */
+/* ------------------------------------- */
+.status-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
   z-index: 1000;
+  background: white;
+  border: 2px solid #ccc;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-#app-header h1 { font-size: 1.1rem; font-weight: 600; }
-.controls { display: flex; gap: 16px; font-size: 0.85rem; }
-.switch { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-.switch input { cursor: pointer; accent-color: #d4af37; }
-
-/* Kontejner mapy */
-#map { flex: 1; width: 100%; z-index: 1; }
-
-/* Černobílý režim */
-#map.grayscale-mode .leaflet-tile-pane {
-  filter: grayscale(100%) contrast(110%);
+.status-toggle:hover {
+  background: #f8f8f8;
 }
 
-/* Výsuvný panel zprava */
-#detail-panel {
-  position: fixed;
-  top: 0; right: 0; bottom: 0; /* Roztažení na plnou výšku */
-  width: 100%; max-width: 400px; /* Na PC max 400px, na mobilu 100% */
+/* Aktivní stav tlačítka po kliknutí */
+.status-toggle.active {
+  background: var(--hlavni-barva);
+  border-color: var(--hlavni-okraj);
+  color: #000;
+}
+
+/* ------------------------------------- */
+/* IKONY NA MAPĚ */
+/* ------------------------------------- */
+.stone-icon-default {
+  background-color: var(--hlavni-barva);
+  border: 1.5px solid var(--hlavni-okraj);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.recently-cleaned { background-color: #2ecc71; border: 1.5px solid #27ae60; border-radius: 50%; width: 16px; height: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+.medium { background-color: #f39c12; border: 1.5px solid #e67e22; border-radius: 50%; width: 16px; height: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+.needs-cleaning { background-color: #e74c3c; border: 1.5px solid #c0392b; border-radius: 50%; width: 16px; height: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+
+/* ------------------------------------- */
+/* BOČNÍ PANEL */
+/* ------------------------------------- */
+.panel {
+  position: absolute;
+  top: 0;
+  left: -350px;
+  width: 320px;
+  height: 100%;
+  background: white;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+  z-index: 1001;
+  transition: left 0.3s ease;
   overflow-y: auto;
-  background: #1a1a1a;
-  border-left: 3px solid #d4af37; /* Rámeček přesunut doleva */
   padding: 20px;
-  padding-top: 50px; /* Místo pro zavírací tlačítko */
-  z-index: 2000;
-  transform: translateX(100%); /* Ve výchozím stavu schováno vpravo */
-  transition: transform 0.3s ease;
-  box-shadow: -4px 0 20px rgba(0,0,0,0.6);
+  box-sizing: border-box;
 }
 
-#detail-panel.active { transform: translateX(0); } /* Vyjetí panelu */
-
-#close-detail {
-  position: absolute; top: 15px; right: 15px;
-  background: transparent; border: none; color: #f0f0f0;
-  font-size: 1.4rem; cursor: pointer;
+.panel.active {
+  left: 0;
 }
 
-#detail-panel img { max-width: 100%; border-radius: 6px; margin-bottom: 12px; border: 1px solid #333; }
-#detail-panel h2 { font-size: 1.2rem; color: #d4af37; margin-bottom: 8px; }
-#detail-panel p { font-size: 0.9rem; margin-bottom: 8px; color: #ccc; line-height: 1.4; }
-#detail-panel a { color: #d4af37; font-weight: 600; text-decoration: none; display: block; margin-top: 12px; }
-
-/* Ikony na mapě (tečky) */
-.stone-icon {
-  background: #d4af37; border: 2px solid #fff; border-radius: 50%;
-  width: 18px !important; height: 18px !important; box-shadow: 0 0 6px rgba(0,0,0,0.5);
-}
-.stone-icon.needs-cleaning { background: #e74c3c; animation: pulse 2s infinite; }
-.stone-icon.medium { background: #f39c12; }
-.stone-icon.recently-cleaned { background: #27ae60; }
-
-/* Vlastní ikony vlevo nahoře (vrstvy a lokace) */
-.custom-leaflet-btn {
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
-  color: #333 !important; /* Barva ikonek jako nativní zoom */
-  background: #fff;
-}
-.custom-leaflet-btn:hover { background: #f4f4f4; }
-.custom-leaflet-btn svg { width: 16px; height: 16px; }
-
-/* Skrýt lištu s polohou, když je panel roztažen na celý mobil (aby nepřekážela) */
-@media (max-width: 400px) {
-  body.panel-open .leaflet-control-container { display: none; }
+.close-btn {
+  float: right;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
 }
 
-/* Formulář */
-#cleaning-form { margin-top: 20px; padding-top: 16px; border-top: 1px solid #333; }
-#cleaning-form h3 { font-size: 0.95rem; color: #d4af37; margin-bottom: 10px; }
-.form-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.form-row label { font-size: 0.85rem; color: #aaa; min-width: 60px; }
-.form-row input {
-  flex: 1; padding: 8px; background: #0f0f0f; border: 1px solid #333;
-  border-radius: 6px; color: #f0f0f0;
+#detail-photo {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  background: #eee;
 }
-.form-row input.invalid { border-color: #e74c3c; background: #1f1010; }
 
-input[type="date"] { color-scheme: dark; }
-
-#cleaning-submit {
-  margin-top: 6px; padding: 9px 20px; background: #d4af37; color: #111;
-  border: none; border-radius: 6px; font-weight: 700; cursor: pointer; width: 100%;
+.address {
+  color: #555;
+  font-style: italic;
+  margin-bottom: 15px;
 }
-.feedback { margin-top: 8px; font-size: 0.85rem; font-weight: 600; display: block; text-align: center; }
-.feedback.hidden { display: none; }
+
+.cleaning-section {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 15px 0;
+}
+
+.cleaning-section input {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  box-sizing: border-box;
+}
+
+.save-btn {
+  width: 100%;
+  padding: 10px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.save-btn:hover { background: #2980b9; }
+.hidden { display: none; }
+.more-link { display: inline-block; margin-top: 10px; color: #3498db; text-decoration: none; }
