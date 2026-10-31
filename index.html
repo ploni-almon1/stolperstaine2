@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stolpersteine Mapa</title>
 
+  <!-- Google Fonty (Ubuntu a Open Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Ikony FontAwesome (pro lupu, vrstvy, terč) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <!-- MarkerCluster CSS -->
@@ -16,15 +24,38 @@
 </head>
 <body>
 
-  <!-- Mapa -->
-  <div id="map"></div>
-  
-  <!-- Nové plovoucí tlačítko stav -->
-  <button id="btn-stav" class="status-toggle">stav</button>
+  <!-- Horní navigační lišta -->
+  <header class="top-nav">
+    <div class="logo">
+      <div class="logo-icon">
+        <div class="cube yellow"></div><div class="cube black"></div>
+        <div class="cube black"></div><div class="cube yellow"></div>
+      </div>
+      <h1>Stolpersteine <span class="fw-normal">mapa</span></h1>
+    </div>
+    <nav class="nav-links">
+      <a href="#">Úvod</a>
+      <a href="#" class="active">Mapa</a>
+      <a href="#">Seznam</a>
+      <a href="#">xyz</a>
+    </nav>
+  </header>
+
+  <!-- Obal pro mapu a její prvky -->
+  <div id="map-wrapper">
+    <!-- Třída grayscale-tiles zajišťuje výchozí černobílé zobrazení -->
+    <div id="map" class="grayscale-tiles"></div>
+    
+    <!-- Plovoucí prvky vpravo nahoře -->
+    <div class="top-right-controls">
+      <button class="icon-btn" title="Hledat (zatím neaktivní)"><i class="fas fa-search"></i></button>
+      <button id="btn-stav" class="pill-btn">stav</button>
+    </div>
+  </div>
 
   <!-- Boční panel s detaily -->
   <div id="detail-panel" class="panel">
-    <button id="close-detail" class="close-btn">✖</button>
+    <button id="close-detail" class="close-btn"><i class="fas fa-times"></i></button>
     <img id="detail-photo" src="" alt="Fotografie kamene">
     <h2 id="detail-name">Jméno</h2>
     <p id="detail-address" class="address">📍 Adresa</p>
@@ -52,7 +83,7 @@
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
+  
   <!-- Naše data a hlavní skript -->
   <script src="data.js"></script>
   <script src="app.js"></script>
