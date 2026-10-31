@@ -1,15 +1,82 @@
 :root {
-  /* ZDE SE CENTRÁLNĚ MĚNÍ HLAVNÍ BARVA APLIKACE */
-  --hlavni-barva: #f1c40f; 
-  --hlavni-okraj: #222222;
+  /* Vaše hlavní zadaná barva */
+  --hlavni-barva: #EFCA08; 
+  --hlavni-okraj: #000000;
 }
 
 body, html {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: Arial, sans-serif;
+  font-family: 'Open Sans', sans-serif;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
+}
+
+/* ------------------------------------- */
+/* HORNÍ NAVIGACE (HEADER) */
+/* ------------------------------------- */
+.top-nav {
+  height: 65px;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 2000;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo-icon {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  width: 26px;
+  height: 26px;
+}
+
+.logo-icon .cube { width: 100%; height: 100%; border-radius: 3px; }
+.logo-icon .yellow { background: var(--hlavni-barva); }
+.logo-icon .black { background: var(--hlavni-okraj); }
+
+.logo h1 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 26px;
+  margin: 0;
+  font-weight: 500;
+  color: #000;
+}
+
+.logo h1 .fw-normal { font-weight: 400; }
+
+.nav-links a {
+  font-family: 'Ubuntu', sans-serif;
+  text-decoration: none;
+  color: #000;
+  font-size: 18px;
+  margin-left: 30px;
+  transition: color 0.2s ease;
+}
+
+/* Aktivní položka v menu z návrhu */
+.nav-links a.active {
+  color: var(--hlavni-barva);
+  font-weight: 700;
+}
+
+/* ------------------------------------- */
+/* MAPA A JEJÍ ROZLOŽENÍ */
+/* ------------------------------------- */
+#map-wrapper {
+  flex: 1;
+  position: relative;
 }
 
 #map {
@@ -17,122 +84,128 @@ body, html {
   height: 100%;
 }
 
+/* Aplikace černobílého filtru na dlaždice mapy */
+.grayscale-tiles .leaflet-tile-pane {
+  filter: grayscale(100%) contrast(1.1) opacity(0.8);
+  transition: filter 0.5s ease;
+}
+
 /* ------------------------------------- */
-/* TLAČÍTKO "STAV" (vznášející se nad mapou) */
+/* TLAČÍTKA NA MAPĚ (Přepsání Leafletu) */
 /* ------------------------------------- */
-.status-toggle {
+/* Zrušení čtvercového spojení a stínů u původních tlačítek */
+.leaflet-bar { border: none !important; box-shadow: none !important; }
+
+/* Kulatá tlačítka podle nákresu (+, -, vrstvy, terč) */
+.leaflet-bar a {
+  background-color: white !important;
+  border: 1.5px solid var(--hlavni-okraj) !important;
+  border-radius: 50% !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 33px !important; /* Vycentrování ikon */
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px !important;
+  color: #000 !important;
+  font-size: 16px !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
+  text-decoration: none;
+}
+
+.leaflet-bar a:hover { background-color: #f4f4f4 !important; }
+.leaflet-control-zoom { margin-top: 20px !important; margin-left: 20px !important; }
+.custom-leaflet-buttons { margin-left: 20px !important; }
+
+/* ------------------------------------- */
+/* PLOVOUCÍ PRVKY VPRAVO NAHOŘE */
+/* ------------------------------------- */
+.top-right-controls {
   position: absolute;
   top: 20px;
   right: 20px;
   z-index: 1000;
+  display: flex;
+  gap: 12px;
+}
+
+.icon-btn, .pill-btn {
   background: white;
-  border: 2px solid #ccc;
-  padding: 8px 18px;
-  border-radius: 20px;
-  font-weight: bold;
-  font-size: 14px;
+  border: 1.5px solid var(--hlavni-okraj);
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.status-toggle:hover {
-  background: #f8f8f8;
-}
-
-/* Aktivní stav tlačítka po kliknutí */
-.status-toggle.active {
-  background: var(--hlavni-barva);
-  border-color: var(--hlavni-okraj);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
   color: #000;
+  transition: background 0.3s ease;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 15px;
+}
+
+.pill-btn {
+  height: 36px;
+  border-radius: 18px;
+  padding: 0 20px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* Aktivní tlačítko STAV z nákresu */
+#btn-stav.active {
+  background-color: var(--hlavni-barva);
 }
 
 /* ------------------------------------- */
-/* IKONY NA MAPĚ */
+/* IKONY BODŮ NA MAPĚ */
 /* ------------------------------------- */
 .stone-icon-default {
   background-color: var(--hlavni-barva);
   border: 1.5px solid var(--hlavni-okraj);
   border-radius: 50%;
-  width: 16px;
-  height: 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  width: 14px;
+  height: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
-.recently-cleaned { background-color: #2ecc71; border: 1.5px solid #27ae60; border-radius: 50%; width: 16px; height: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
-.medium { background-color: #f39c12; border: 1.5px solid #e67e22; border-radius: 50%; width: 16px; height: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
-.needs-cleaning { background-color: #e74c3c; border: 1.5px solid #c0392b; border-radius: 50%; width: 16px; height: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+/* Semafor pro úklid */
+.recently-cleaned { background-color: #2ecc71; border: 1.5px solid #1e8449; border-radius: 50%; width: 14px; height: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+.medium { background-color: #f39c12; border: 1.5px solid #b9770e; border-radius: 50%; width: 14px; height: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+.needs-cleaning { background-color: #e74c3c; border: 1.5px solid #922b21; border-radius: 50%; width: 14px; height: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 
 /* ------------------------------------- */
-/* BOČNÍ PANEL */
+/* BOČNÍ PANEL S DETAILY */
 /* ------------------------------------- */
 .panel {
   position: absolute;
-  top: 0;
+  top: 65px; /* Začíná až pod hlavičkou */
   left: -350px;
   width: 320px;
-  height: 100%;
+  height: calc(100% - 65px);
   background: white;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
   z-index: 1001;
   transition: left 0.3s ease;
   overflow-y: auto;
-  padding: 20px;
+  padding: 25px;
   box-sizing: border-box;
 }
 
-.panel.active {
-  left: 0;
-}
-
-.close-btn {
-  float: right;
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-#detail-photo {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  background: #eee;
-}
-
-.address {
-  color: #555;
-  font-style: italic;
-  margin-bottom: 15px;
-}
-
-.cleaning-section {
-  background: #f9f9f9;
-  padding: 15px;
-  border-radius: 5px;
-  margin: 15px 0;
-}
-
-.cleaning-section input {
-  width: 100%;
-  padding: 8px;
-  margin: 10px 0;
-  box-sizing: border-box;
-}
-
-.save-btn {
-  width: 100%;
-  padding: 10px;
-  background: #3498db;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.save-btn:hover { background: #2980b9; }
+.panel.active { left: 0; }
+.close-btn { float: right; background: none; border: none; font-size: 20px; cursor: pointer; color: #555; }
+#detail-photo { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; background: #eee; }
+#detail-name { font-family: 'Ubuntu', sans-serif; margin-top: 0; margin-bottom: 5px; }
+.address { color: #555; font-style: italic; margin-bottom: 15px; font-size: 14px; }
+.cleaning-section { background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #eee; margin: 15px 0; }
+.cleaning-section input { width: 100%; padding: 8px; margin: 10px 0; box-sizing: border-box; font-family: 'Open Sans', sans-serif; }
+.save-btn { width: 100%; padding: 10px; background: var(--hlavni-okraj); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; font-family: 'Ubuntu', sans-serif;}
+.save-btn:hover { background: #333; }
 .hidden { display: none; }
-.more-link { display: inline-block; margin-top: 10px; color: #3498db; text-decoration: none; }
+.more-link { display: inline-block; margin-top: 10px; color: var(--hlavni-okraj); font-weight: bold; }
