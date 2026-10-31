@@ -5,17 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Stolpersteine Mapa</title>
 
-  <!-- Google Fonty (Ubuntu a Open Sans) -->
+  <!-- Google Fonty -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
   
-  <!-- Ikony FontAwesome (pro lupu, vrstvy, terč, hamburger) -->
+  <!-- Ikony FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <!-- MarkerCluster CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
@@ -39,28 +38,27 @@
       <a href="#">Úvod</a>
       <a href="#" class="active">Mapa</a>
       <a href="#">Seznam</a>
-      <a href="#">xyz</a>
+      <a href="#">Další</a>
     </nav>
 
-    <!-- Tlačítko pro mobilní menu -->
+    <!-- Hamburger pro mobil (skrytý na PC) -->
     <button class="hamburger mobile-only" id="hamburger-btn">
       <i class="fas fa-bars"></i>
     </button>
   </header>
 
-  <!-- Mobilní rozbalovací menu (skryté v základu) -->
+  <!-- Mobilní rozbalovací menu -->
   <nav class="mobile-menu" id="mobile-menu">
     <a href="#">Úvod</a>
     <a href="#" class="active">Mapa</a>
     <a href="#">Seznam</a>
-    <a href="#">xyz</a>
+    <a href="#">Další</a>
   </nav>
 
-  <!-- Obal pro mapu a její prvky -->
+  <!-- Obal pro mapu -->
   <div id="map-wrapper">
     <div id="map" class="grayscale-tiles"></div>
     
-    <!-- Plovoucí prvky vpravo nahoře -->
     <div class="top-right-controls">
       <button class="icon-btn" title="Hledat (zatím neaktivní)"><i class="fas fa-search"></i></button>
       <button id="btn-stav" class="pill-btn">stav</button>
@@ -92,13 +90,11 @@
     <a id="detail-link" href="#" target="_blank" class="more-link">Více informací</a>
   </div>
 
-  <!-- Skripty Leaflet a Firebase -->
+  <!-- Skripty -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  
-  <!-- Naše data a hlavní skript -->
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
