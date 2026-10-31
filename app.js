@@ -10,15 +10,13 @@ const firebaseConfig = {
   appId: "1:953667739912:web:e848da54d3ce4540094cbd"
 };
 
-// Spuštění Firebase a napojení na databázi
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Pole pro kameny stažené z databáze
 let appStones = []; 
 
 // ==========================================
-// 2. CACHOVÁNÍ DOM ELEMENTŮ A SETUP
+// 2. DOM ELEMENTY
 // ==========================================
 const DOM = {
   panel: document.getElementById('detail-panel'),
@@ -30,8 +28,7 @@ const DOM = {
   link: document.getElementById('detail-link'),
   dateInput: document.getElementById('cleaning-date'),
   feedback: document.getElementById('cleaning-feedback'),
-  mapContainer: document.getElementById('map'),
-  toggleCleaning: document.getElementById('toggle-cleaning')
+  btnStav: document.getElementById('btn-stav') // Nové tlačítko
 };
 
 DOM.dateInput.max = new Date().toISOString().split("T")[0];
@@ -43,36 +40,32 @@ let currentStone = null;
 function loadSavedData() {
   db.collection("kameny").onSnapshot((querySnapshot) => {
     appStones = [];
-    const dbIds = new Set(); // Množina už existujících ID v databázi
+    const dbIds = new Set();
     
     querySnapshot.forEach((doc) => {
       appStones.push(doc.data());
-      dbIds.add(Number(doc.id)); // Uložíme si ID, která už v databázi jsou
+      dbIds.add(Number(doc.id));
     });
 
-    // CHYTRÝ AUTO-IMPORT: Porovná data.js s databází
+    // CHYTRÝ AUTO-IMPORT (zabrání přemazání)
     if (typeof stolpersteine !== 'undefined' && stolpersteine.length > 0) {
       stolpersteine.forEach(stone => {
-        // Pokud kámen z data.js v databázi chybí, nahrajeme ho
         if (!dbIds.has(stone.id)) {
-          console.log("Přidávám do databáze nový kámen: ", stone.name);
+          console.log("Přidávám do DB: ", stone.name);
           db.collection("kameny").doc(String(stone.id)).set(stone);
         }
       });
     } 
     
-    // Vykreslíme mapu s čerstvými daty
     renderMarkers();
   });
 }
 
-// Odeslání nového data čištění na server
 function saveData(id, dateIso) {
-  // Použijeme set s merge: true, což je bezpečnější než update
   db.collection("kameny").doc(String(id)).set({
     lastCleaned: dateIso
   }, { merge: true }).catch(error => {
-    console.error("Chyba při ukládání do DB: ", error);
+    console.error("Chyba při ukládání: ", error);
     alert("Chyba při ukládání. Zkontrolujte připojení k internetu.");
   });
 }
@@ -111,7 +104,9 @@ function getStatusText(dateStr) {
 // ==========================================
 // 5. MAPA A VRSTVY
 // ==========================================
-const map = L.map('map').setView([50.035, 15.775], 14);
+const map = L.map('map', { zoomControl: false }).setView([49.5937, 17.2508], 14);
+L.control.zoom({ position: 'topleft' }).addTo(map);
+
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap'
 }).addTo(map);
@@ -119,44 +114,11 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const markersGroup = L.markerClusterGroup();
 const cleaningGroup = L.layerGroup();
 
-// --- Nový sdružený ovládací prvek (Vrstvy + Poloha) ---
-const CustomToolbar = L.Control.extend({
-  options: { position: 'topleft' },
-  onAdd: function () {
-    const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-
-    const btnLayers = L.DomUtil.create('a', 'custom-leaflet-btn', container);
-    btnLayers.href = '#';
-    btnLayers.title = 'Přepnout barevnou / černobílou mapu';
-    btnLayers.innerHTML = `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 12 12 17 22 12"></polyline><polyline points="2 17 12 22 22 17"></polyline></svg>`;
-
-    const btnLocate = L.DomUtil.create('a', 'custom-leaflet-btn', container);
-    btnLocate.href = '#';
-    btnLocate.title = 'Moje poloha';
-    btnLocate.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2" fill="currentColor"></circle><circle cx="12" cy="12" r="7"></circle><line x1="12" y1="1" x2="12" y2="5"></line><line x1="12" y1="19" x2="12" y2="23"></line><line x1="1" y1="12" x2="5" y2="12"></line><line x1="19" y1="12" x2="23" y2="12"></line></svg>`;
-
-    L.DomEvent.disableClickPropagation(container);
-
-    L.DomEvent.on(btnLayers, 'click', (e) => {
-      L.DomEvent.stop(e);
-      DOM.mapContainer.classList.toggle('grayscale-mode'); 
-    });
-
-    L.DomEvent.on(btnLocate, 'click', (e) => {
-      L.DomEvent.stop(e);
-      map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true });
-    });
-
-    return container;
-  }
-});
-map.addControl(new CustomToolbar());
-
 // ==========================================
-// 6. VYKRESLOVÁNÍ KAMENŮ
+// 6. VYKRESLOVÁNÍ KAMENŮ A TLAČÍTKO "STAV"
 // ==========================================
 function renderMarkers() {
-  const isCleaningMode = DOM.toggleCleaning.checked;
+  const isCleaningMode = DOM.btnStav.classList.contains('active');
 
   if (map.hasLayer(markersGroup)) map.removeLayer(markersGroup);
   if (map.hasLayer(cleaningGroup)) map.removeLayer(cleaningGroup);
@@ -165,6 +127,7 @@ function renderMarkers() {
   cleaningGroup.clearLayers();
 
   if (isCleaningMode) {
+    // REŽIM STAV: Semafor (Zelená/Oranžová/Červená)
     map.addLayer(cleaningGroup);
     const groupsByCoords = {};
     
@@ -177,20 +140,20 @@ function renderMarkers() {
     Object.values(groupsByCoords).forEach(group => {
       const size = group.length;
       group.forEach((stone, index) => {
-        let anchor = [9, 9];
+        let anchor = [8, 8];
         if (size > 1) {
           const angle = index * (2 * Math.PI / size);
           const radius = 14; 
           const offsetX = Math.cos(angle) * radius;
           const offsetY = Math.sin(angle) * radius;
-          anchor = [9 - offsetX, 9 - offsetY];
+          anchor = [8 - offsetX, 8 - offsetY];
         }
 
         const statusClass = getCleaningStatus(stone.lastCleaned);
         const icon = L.divIcon({
           className: '',
-          html: `<div class="stone-icon ${statusClass}"></div>`,
-          iconSize: [18, 18],
+          html: `<div class="${statusClass}"></div>`,
+          iconSize: [16, 16],
           iconAnchor: anchor
         });
 
@@ -201,15 +164,15 @@ function renderMarkers() {
     });
 
   } else {
+    // VÝCHOZÍ REŽIM: Všechny kameny ve vaší žluté barvě
     map.addLayer(markersGroup);
     
     appStones.forEach(stone => {
-      const statusClass = getCleaningStatus(stone.lastCleaned);
       const icon = L.divIcon({
         className: '',
-        html: `<div class="stone-icon ${statusClass}"></div>`,
-        iconSize: [18, 18],
-        iconAnchor: [9, 9]
+        html: `<div class="stone-icon-default"></div>`,
+        iconSize: [16, 16],
+        iconAnchor: [8, 8]
       });
       L.marker([stone.lat, stone.lng], { icon })
         .addTo(markersGroup)
@@ -218,10 +181,14 @@ function renderMarkers() {
   }
 }
 
-DOM.toggleCleaning.addEventListener('change', renderMarkers);
+// Přepínání tlačítka
+DOM.btnStav.addEventListener('click', () => {
+  DOM.btnStav.classList.toggle('active');
+  renderMarkers();
+});
 
 // ==========================================
-// 7. OVLÁDÁNÍ A UDÁLOSTI
+// 7. OVLÁDÁNÍ BOČNÍHO PANELU A FORMULÁŘE
 // ==========================================
 function openDetail(stone) {
   currentStone = stone;
@@ -236,12 +203,10 @@ function openDetail(stone) {
   DOM.feedback.classList.add('hidden');
 
   DOM.panel.classList.add('active');
-  document.body.classList.add('panel-open');
 }
 
 document.getElementById('close-detail').onclick = () => {
   DOM.panel.classList.remove('active');
-  document.body.classList.remove('panel-open');
 };
 
 document.getElementById('cleaning-form').onsubmit = (e) => {
@@ -258,24 +223,7 @@ document.getElementById('cleaning-form').onsubmit = (e) => {
   setTimeout(() => DOM.feedback.classList.add('hidden'), 2500);
 };
 
-// Lokalizace GPS vykreslení na mapě
-let userLocationMarker = null;
-map.on('locationfound', (e) => {
-  if (userLocationMarker) {
-    userLocationMarker.setLatLng(e.latlng);
-  } else {
-    userLocationMarker = L.circleMarker(e.latlng, {
-      color: '#3498db', fillColor: '#3498db', fillOpacity: 1, radius: 8, weight: 3
-    }).addTo(map);
-  }
-  userLocationMarker.bindPopup("Vaše aktuální poloha").openPopup();
-});
-
-map.on('locationerror', () => {
-  alert("Polohu nelze zjistit. Zkontrolujte, zda máte zapnutou GPS a web běží na zabezpečeném připojení (HTTPS).");
-});
-
 // ==========================================
-// START APLIKACE
+// START
 // ==========================================
 loadSavedData();
