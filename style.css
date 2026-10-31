@@ -3,7 +3,7 @@
   --hlavni-okraj: #000000;
 }
 
-/* ODSTRANĚNÍ ZASTARALÝCH MODRÝCH EFEKTŮ PROKLIKU NA VŠECH ZAŘÍZENÍCH */
+/* ODSTRANĚNÍ ZASTARALÝCH MODRÝCH PROKLIKŮ VŠUDE */
 * {
   -webkit-tap-highlight-color: transparent !important;
 }
@@ -39,21 +39,20 @@ body, html {
   position: relative;
 }
 
-/* Zajištění nedeformování loga */
 .logo {
   display: flex;
   align-items: center;
   gap: 15px;
-  flex-shrink: 0;
-  white-space: nowrap;
+  flex-shrink: 0; /* Zabrání zmačkání loga na mobilu */
 }
 
 .logo-icon {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2px;
-  width: 26px;
+  min-width: 26px; /* Pevná velikost ikonky */
   height: 26px;
+  flex-shrink: 0;
 }
 
 .logo-icon .cube { width: 100%; height: 100%; border-radius: 3px; }
@@ -66,6 +65,7 @@ body, html {
   margin: 0;
   font-weight: 500;
   color: #000;
+  white-space: nowrap; /* Zabrání rozlomení textu na dva řádky */
 }
 .logo h1 .fw-normal { font-weight: 400; }
 
@@ -110,9 +110,8 @@ body, html {
   transform: translateY(-150%);
   transition: transform 0.3s ease;
 }
-.mobile-menu.open {
-  transform: translateY(0);
-}
+.mobile-menu.open { transform: translateY(0); }
+
 .mobile-menu a {
   padding: 15px 30px;
   font-family: 'Ubuntu', sans-serif;
@@ -121,70 +120,59 @@ body, html {
   color: #000;
   border-bottom: 1px solid #eee;
 }
-.mobile-menu a.active {
-  color: var(--hlavni-barva);
-  font-weight: 700;
-}
+.mobile-menu a.active { color: var(--hlavni-barva); font-weight: 700; }
 
-/* RESPONZIVITA PRO MOBILY */
+/* Přepnutí layoutu na mobilech */
 @media (max-width: 768px) {
   .desktop-only { display: none !important; }
   .mobile-only { display: block; }
   .top-nav { padding: 0 15px; }
-  .logo h1 { font-size: 20px; }
-  .logo-icon { width: 22px; height: 22px; }
-  
-  /* Zmenšení panelu s detaily na mobilu */
+  .logo h1 { font-size: 22px; }
   .panel { width: 100%; left: -100%; }
 }
 
 /* ------------------------------------- */
-/* MAPA A JEJÍ ROZLOŽENÍ */
+/* MAPA A TLAČÍTKA S PŘESNÝMI ROZESTUPY */
 /* ------------------------------------- */
-#map-wrapper {
-  flex: 1;
-  position: relative;
-}
-#map {
-  width: 100%;
-  height: 100%;
-}
+#map-wrapper { flex: 1; position: relative; }
+#map { width: 100%; height: 100%; }
 .grayscale-tiles .leaflet-tile-pane {
   filter: grayscale(100%) contrast(1.1) opacity(0.8);
   transition: filter 0.5s ease;
 }
 
-/* ------------------------------------- */
-/* TLAČÍTKA NA MAPĚ (Přesné mezery) */
-/* ------------------------------------- */
-.leaflet-bar { background: transparent !important; border: none !important; box-shadow: none !important; }
+/* Zrušení všech výchozích Leaflet okrajů */
+.leaflet-bar { border: none !important; box-shadow: none !important; background: transparent !important; }
 
-/* Jednotný styl a margin pro VŠECHNA kulatá tlačítka nalevo */
-.leaflet-bar a {
-  background-color: white !important;
-  border: 1.5px solid var(--hlavni-okraj) !important;
-  border-radius: 50% !important;
+/* Jednotný styl a pevná mezera pod KAŽDÝM tlačítkem nalevo */
+.leaflet-bar a,
+.leaflet-touch .leaflet-bar a,
+.leaflet-touch .leaflet-bar a:first-child,
+.leaflet-touch .leaflet-bar a:last-child {
   width: 36px !important;
   height: 36px !important;
-  line-height: 33px !important;
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
-  margin: 0 0 12px 0 !important; /* Pevná mezera 12px pod každým tlačítkem */
+  line-height: 34px !important;
+  border-radius: 50% !important;
+  border: 1.5px solid var(--hlavni-okraj) !important;
+  background-color: white !important;
   color: #000 !important;
-  font-size: 16px !important;
+  margin: 0 0 12px 0 !important; /* Fixní mezera 12px pod každým tlačítkem */
   box-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
   text-decoration: none;
 }
 
 .leaflet-bar a:hover { background-color: #f4f4f4 !important; }
 
-/* Zarovnání bloků tlačítek (zoom nahoře a naše pod ním) */
-.leaflet-control-zoom { margin-top: 20px !important; margin-left: 20px !important; margin-bottom: 0 !important; }
-.custom-leaflet-buttons { margin-left: 20px !important; margin-top: 0 !important; }
+/* Správné napojení bloku našich tlačítek hned pod tlačítka zoomu */
+.leaflet-left .leaflet-control { margin-left: 20px !important; }
+.leaflet-top .leaflet-control { margin-top: 20px !important; }
+.custom-leaflet-buttons { margin-top: 0 !important; } /* Zabrání zdvojené mezeře pod lupou */
 
 /* ------------------------------------- */
-/* PLOVOUCÍ PRVKY VPRAVO NAHOŘE */
+/* TLAČÍTKA VPRAVO NAHOŘE */
 /* ------------------------------------- */
 .top-right-controls {
   position: absolute;
@@ -212,7 +200,7 @@ body, html {
 #btn-stav.active { background-color: var(--hlavni-barva); }
 
 /* ------------------------------------- */
-/* IKONY BODŮ NA MAPĚ */
+/* IKONY NA MAPĚ */
 /* ------------------------------------- */
 .stone-icon-default {
   background-color: var(--hlavni-barva);
@@ -222,13 +210,12 @@ body, html {
   height: 14px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
-
 .recently-cleaned { background-color: #2ecc71; border: 1.5px solid #1e8449; border-radius: 50%; width: 14px; height: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 .medium { background-color: #f39c12; border: 1.5px solid #b9770e; border-radius: 50%; width: 14px; height: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 .needs-cleaning { background-color: #e74c3c; border: 1.5px solid #922b21; border-radius: 50%; width: 14px; height: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 
 /* ------------------------------------- */
-/* BOČNÍ PANEL S DETAILY */
+/* BOČNÍ PANEL */
 /* ------------------------------------- */
 .panel {
   position: absolute;
@@ -244,7 +231,6 @@ body, html {
   padding: 25px;
   box-sizing: border-box;
 }
-
 .panel.active { left: 0; }
 .close-btn { float: right; background: none; border: none; font-size: 20px; cursor: pointer; color: #555; }
 #detail-photo { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; background: #eee; }
