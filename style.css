@@ -1,7 +1,17 @@
 :root {
-  /* Vaše hlavní zadaná barva */
   --hlavni-barva: #EFCA08; 
   --hlavni-okraj: #000000;
+}
+
+/* ODSTRANĚNÍ ZASTARALÝCH MODRÝCH EFEKTŮ PROKLIKU NA VŠECH ZAŘÍZENÍCH */
+* {
+  -webkit-tap-highlight-color: transparent !important;
+}
+button, a, input {
+  outline: none !important;
+}
+button:focus, a:focus {
+  outline: none !important;
 }
 
 body, html {
@@ -26,12 +36,16 @@ body, html {
   padding: 0 30px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   z-index: 2000;
+  position: relative;
 }
 
+/* Zajištění nedeformování loga */
 .logo {
   display: flex;
   align-items: center;
   gap: 15px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .logo-icon {
@@ -53,7 +67,6 @@ body, html {
   font-weight: 500;
   color: #000;
 }
-
 .logo h1 .fw-normal { font-weight: 400; }
 
 .nav-links a {
@@ -64,11 +77,65 @@ body, html {
   margin-left: 30px;
   transition: color 0.2s ease;
 }
-
-/* Aktivní položka v menu z návrhu */
 .nav-links a.active {
   color: var(--hlavni-barva);
   font-weight: 700;
+}
+
+/* ------------------------------------- */
+/* MOBILNÍ MENU A HAMBURGER */
+/* ------------------------------------- */
+.mobile-only { display: none; }
+.desktop-only { display: flex; }
+
+.hamburger {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--hlavni-okraj);
+  padding: 5px;
+}
+
+.mobile-menu {
+  position: absolute;
+  top: 65px;
+  left: 0;
+  width: 100%;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  z-index: 1999;
+  transform: translateY(-150%);
+  transition: transform 0.3s ease;
+}
+.mobile-menu.open {
+  transform: translateY(0);
+}
+.mobile-menu a {
+  padding: 15px 30px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 18px;
+  text-decoration: none;
+  color: #000;
+  border-bottom: 1px solid #eee;
+}
+.mobile-menu a.active {
+  color: var(--hlavni-barva);
+  font-weight: 700;
+}
+
+/* RESPONZIVITA PRO MOBILY */
+@media (max-width: 768px) {
+  .desktop-only { display: none !important; }
+  .mobile-only { display: block; }
+  .top-nav { padding: 0 15px; }
+  .logo h1 { font-size: 20px; }
+  .logo-icon { width: 22px; height: 22px; }
+  
+  /* Zmenšení panelu s detaily na mobilu */
+  .panel { width: 100%; left: -100%; }
 }
 
 /* ------------------------------------- */
@@ -78,36 +145,32 @@ body, html {
   flex: 1;
   position: relative;
 }
-
 #map {
   width: 100%;
   height: 100%;
 }
-
-/* Aplikace černobílého filtru na dlaždice mapy */
 .grayscale-tiles .leaflet-tile-pane {
   filter: grayscale(100%) contrast(1.1) opacity(0.8);
   transition: filter 0.5s ease;
 }
 
 /* ------------------------------------- */
-/* TLAČÍTKA NA MAPĚ (Přepsání Leafletu) */
+/* TLAČÍTKA NA MAPĚ (Přesné mezery) */
 /* ------------------------------------- */
-/* Zrušení čtvercového spojení a stínů u původních tlačítek */
-.leaflet-bar { border: none !important; box-shadow: none !important; }
+.leaflet-bar { background: transparent !important; border: none !important; box-shadow: none !important; }
 
-/* Kulatá tlačítka podle nákresu (+, -, vrstvy, terč) */
+/* Jednotný styl a margin pro VŠECHNA kulatá tlačítka nalevo */
 .leaflet-bar a {
   background-color: white !important;
   border: 1.5px solid var(--hlavni-okraj) !important;
   border-radius: 50% !important;
   width: 36px !important;
   height: 36px !important;
-  line-height: 33px !important; /* Vycentrování ikon */
+  line-height: 33px !important;
   display: flex !important;
   justify-content: center;
   align-items: center;
-  margin-bottom: 10px !important;
+  margin: 0 0 12px 0 !important; /* Pevná mezera 12px pod každým tlačítkem */
   color: #000 !important;
   font-size: 16px !important;
   box-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
@@ -115,8 +178,10 @@ body, html {
 }
 
 .leaflet-bar a:hover { background-color: #f4f4f4 !important; }
-.leaflet-control-zoom { margin-top: 20px !important; margin-left: 20px !important; }
-.custom-leaflet-buttons { margin-left: 20px !important; }
+
+/* Zarovnání bloků tlačítek (zoom nahoře a naše pod ním) */
+.leaflet-control-zoom { margin-top: 20px !important; margin-left: 20px !important; margin-bottom: 0 !important; }
+.custom-leaflet-buttons { margin-left: 20px !important; margin-top: 0 !important; }
 
 /* ------------------------------------- */
 /* PLOVOUCÍ PRVKY VPRAVO NAHOŘE */
@@ -142,26 +207,9 @@ body, html {
   transition: background 0.3s ease;
 }
 
-.icon-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 15px;
-}
-
-.pill-btn {
-  height: 36px;
-  border-radius: 18px;
-  padding: 0 20px;
-  font-size: 15px;
-  font-weight: 700;
-  font-family: 'Open Sans', sans-serif;
-}
-
-/* Aktivní tlačítko STAV z nákresu */
-#btn-stav.active {
-  background-color: var(--hlavni-barva);
-}
+.icon-btn { width: 36px; height: 36px; border-radius: 50%; font-size: 15px; }
+.pill-btn { height: 36px; border-radius: 18px; padding: 0 20px; font-size: 15px; font-weight: 700; font-family: 'Open Sans', sans-serif; }
+#btn-stav.active { background-color: var(--hlavni-barva); }
 
 /* ------------------------------------- */
 /* IKONY BODŮ NA MAPĚ */
@@ -175,7 +223,6 @@ body, html {
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
-/* Semafor pro úklid */
 .recently-cleaned { background-color: #2ecc71; border: 1.5px solid #1e8449; border-radius: 50%; width: 14px; height: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 .medium { background-color: #f39c12; border: 1.5px solid #b9770e; border-radius: 50%; width: 14px; height: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 .needs-cleaning { background-color: #e74c3c; border: 1.5px solid #922b21; border-radius: 50%; width: 14px; height: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
@@ -185,7 +232,7 @@ body, html {
 /* ------------------------------------- */
 .panel {
   position: absolute;
-  top: 65px; /* Začíná až pod hlavičkou */
+  top: 65px;
   left: -350px;
   width: 320px;
   height: calc(100% - 65px);
