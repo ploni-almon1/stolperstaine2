@@ -1,64 +1,59 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stolpersteine Mapa</title>
 
-  <!-- CSS Leaflet -->
+  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- MarkerCluster CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-  
-  <!-- Naše CSS styly -->
-  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Náš vlastní styl -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <header id="app-header">
-    <h1>🪨 Stolpersteine</h1>
-    <div class="controls">
-      <label class="switch">
-        <input type="checkbox" id="toggle-cleaning" />
-        <span>Stav čištění (Kytičky)</span>
-      </label>
+  <!-- Mapa -->
+  <div id="map"></div>
+  
+  <!-- Nové plovoucí tlačítko stav -->
+  <button id="btn-stav" class="status-toggle">stav</button>
+
+  <!-- Boční panel s detaily -->
+  <div id="detail-panel" class="panel">
+    <button id="close-detail" class="close-btn">✖</button>
+    <img id="detail-photo" src="" alt="Fotografie kamene">
+    <h2 id="detail-name">Jméno</h2>
+    <p id="detail-address" class="address">📍 Adresa</p>
+    <p id="detail-bio">Zde budou informace o osobě...</p>
+    
+    <hr>
+    
+    <div class="cleaning-section">
+      <h3>Údržba kamene</h3>
+      <p id="detail-cleaned">🧹 Zjišťuji stav...</p>
+      
+      <form id="cleaning-form">
+        <label for="cleaning-date">Zaznamenat nové čištění:</label>
+        <input type="date" id="cleaning-date" required>
+        <button type="submit" class="save-btn">Uložit online</button>
+      </form>
+      <div id="cleaning-feedback" class="hidden"></div>
     </div>
-  </header>
+    
+    <a id="detail-link" href="#" target="_blank" class="more-link">Více informací</a>
+  </div>
 
-  <!-- Mapa má ve výchozím stavu třídu pro černobílý režim -->
-  <div id="map" class="grayscale-mode"></div>
-
-  <!-- Detailní panel vyjíždějící zprava -->
-  <aside id="detail-panel">
-    <button id="close-detail">✕</button>
-    <img id="detail-photo" src="" alt="Fotografie kamene" />
-    <h2 id="detail-name"></h2>
-    <p id="detail-address"></p>
-    <p id="detail-bio"></p>
-    <p id="detail-cleaned"></p>
-
-    <form id="cleaning-form">
-      <h3>Zaznamenat čištění</h3>
-      <div class="form-row">
-        <label for="cleaning-date">Datum:</label>
-        <input type="date" id="cleaning-date" required max="" />
-      </div>
-      <button type="submit" id="cleaning-submit">Uložit</button>
-      <span id="cleaning-feedback" class="feedback hidden"></span>
-    </form>
-
-    <a id="detail-link" href="#" target="_blank">Zobrazit plný profil →</a>
-  </aside>
-
-  <!-- Mapové skripty Leafletu -->
+  <!-- Skripty Leaflet a Firebase -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-  
-  <!-- 🔥 Firebase Skripty (Verze 8 pro snadné použití) 🔥 -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-  <!-- Naše data a aplikace -->
+  <!-- Naše data a hlavní skript -->
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
