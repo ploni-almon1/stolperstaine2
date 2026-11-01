@@ -74,14 +74,13 @@ body, html {
   .leaflet-top .leaflet-control:first-child { margin-top: calc(20px + env(safe-area-inset-top, 20px)) !important; }
   
   #page-uvod { padding-top: calc(40px + env(safe-area-inset-top, 20px)); }
-  .panel { width: 100%; left: -100%; top: 0; height: 100%; z-index: 2005; }
   
-  /* OPRAVA: Plovoucí prvky se roztáhnou od pravého až k levému okraji (přesně nad tlačítko +) */
+  /* Plovoucí prvky se roztáhnou od pravého až k levému okraji (přesně nad tlačítko +) */
   .top-right-controls { 
     top: calc(20px + env(safe-area-inset-top, 20px)) !important; 
-    left: 20px !important; /* Zarovná levý okraj na pixel přesně s + tlačítkem */
+    left: 20px !important; 
     right: 20px !important; 
-    justify-content: flex-end !important; /* Ostatní tlačítka zůstanou natlačená vpravo */
+    justify-content: flex-end !important; 
   }
   
   /* Vyhledávací pole vyplní veškerý volný prostor až do levého okraje */
@@ -111,7 +110,7 @@ body, html {
   margin: 0 0 12px 0 !important; 
   box-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
   display: flex !important; justify-content: center !important; align-items: center !important; text-decoration: none;
-  box-sizing: border-box !important; /* TOTO ZARUČÍ STEJNOU VÝŠKU JAKO MÁ LUPA */
+  box-sizing: border-box !important; 
 }
 .leaflet-bar a:hover { background-color: #f4f4f4 !important; }
 
@@ -122,7 +121,7 @@ body, html {
 .icon-btn, .pill-btn {
   background: white; border: 1.5px solid var(--hlavni-okraj); cursor: pointer; display: flex; align-items: center;
   justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.15); color: #000; transition: background 0.3s ease;
-  box-sizing: border-box !important; /* TOTO ZARUČÍ STEJNOU VÝŠKU */
+  box-sizing: border-box !important; 
 }
 .icon-btn { width: 38px !important; height: 38px !important; border-radius: 50%; font-size: 15px; flex-shrink: 0; }
 .pill-btn { height: 38px !important; border-radius: 19px; padding: 0 20px; font-size: 15px; font-weight: 700; font-family: 'Open Sans', sans-serif; }
@@ -133,7 +132,7 @@ body, html {
 .search-box { display: none; position: relative; }
 .search-box.active { display: block; }
 #search-input {
-  height: 38px !important; /* DOKONALE STEJNÁ VÝŠKA */
+  height: 38px !important; 
   border-radius: 19px; border: 1.5px solid var(--hlavni-okraj); padding: 0 15px; width: 200px;
   font-family: 'Open Sans', sans-serif; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); box-sizing: border-box !important;
 }
@@ -148,61 +147,57 @@ body, html {
 .suggestions-list li:hover { background-color: #f4f4f4; }
 .hidden { display: none !important; }
 
-
 /* ------------------------------------- */
-/* PLOVOUCÍ PRVKY A VYHLEDÁVÁNÍ */
-/* ------------------------------------- */
-.top-right-controls { position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; gap: 12px; align-items: center; }
-.icon-btn, .pill-btn {
-  background: white; border: 1.5px solid var(--hlavni-okraj); cursor: pointer; display: flex; align-items: center;
-  justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.15); color: #000; transition: background 0.3s ease;
-}
-.icon-btn { width: 36px; height: 36px; border-radius: 50%; font-size: 15px; flex-shrink: 0; }
-.pill-btn { height: 36px; border-radius: 18px; padding: 0 20px; font-size: 15px; font-weight: 700; font-family: 'Open Sans', sans-serif; }
-#btn-stav.active { background-color: var(--hlavni-barva); }
-#btn-search-toggle.active { background-color: var(--hlavni-barva); }
-
-/* Okno pro vyhledávání */
-.search-box {
-  display: none; position: relative;
-}
-.search-box.active { display: block; }
-#search-input {
-  height: 36px; border-radius: 18px; border: 1.5px solid var(--hlavni-okraj); padding: 0 15px; width: 200px;
-  font-family: 'Open Sans', sans-serif; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); box-sizing: border-box;
-}
-/* Našeptávač (rolovací seznam) */
-.suggestions-list {
-  position: absolute; top: 40px; right: 0; width: 200px; background: white; border: 1.5px solid var(--hlavni-okraj);
-  border-radius: 8px; list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-.suggestions-list li {
-  padding: 10px 15px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #eee; transition: background 0.2s;
-}
-.suggestions-list li:last-child { border-bottom: none; }
-.suggestions-list li:hover { background-color: #f4f4f4; }
-.hidden { display: none !important; }
-
-/* ------------------------------------- */
-/* IKONY NA MAPĚ A BOČNÍ PANEL */
+/* IKONY NA MAPĚ A BAREVNÝ STAV */
 /* ------------------------------------- */
 .stone-icon-default { background-color: var(--hlavni-barva); border: 1.5px solid var(--hlavni-okraj); border-radius: 50%; width: 14px; height: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 .recently-cleaned { background-color: #2ecc71; border: 1.5px solid #1e8449; border-radius: 50%; width: 14px; height: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 .medium { background-color: #f39c12; border: 1.5px solid #b9770e; border-radius: 50%; width: 14px; height: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 .needs-cleaning { background-color: #e74c3c; border: 1.5px solid #922b21; border-radius: 50%; width: 14px; height: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 
-.panel {
-  position: absolute; top: 65px; left: -350px; width: 320px; height: calc(100% - 65px); background: white;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 1001; transition: left 0.3s ease; overflow-y: auto; padding: 25px; box-sizing: border-box;
+/* ------------------------------------- */
+/* MODÁLNÍ KARTA KAMENE (NOVÝ VZHLED) */
+/* ------------------------------------- */
+.modal-backdrop {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(255, 255, 255, 0.4); 
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); 
+  z-index: 3000; display: flex; justify-content: center; align-items: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
 }
-.panel.active { left: 0; }
-.close-btn { float: right; background: none; border: none; font-size: 20px; cursor: pointer; color: #555; }
-#detail-photo { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; background: #eee; }
-#detail-name { font-family: 'Ubuntu', sans-serif; margin-top: 0; margin-bottom: 5px; }
-.address { color: #555; font-style: italic; margin-bottom: 15px; font-size: 14px; }
-.cleaning-section { background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #eee; margin: 15px 0; }
-.cleaning-section input { width: 100%; padding: 8px; margin: 10px 0; box-sizing: border-box; font-family: 'Open Sans', sans-serif; }
-.save-btn { width: 100%; padding: 10px; background: var(--hlavni-okraj); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; font-family: 'Ubuntu', sans-serif;}
+.modal-backdrop.active { opacity: 1; pointer-events: auto; }
+
+.modal-card {
+  background: white; width: 90%; max-width: 420px; max-height: 90vh; 
+  border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  display: flex; flex-direction: column; overflow: hidden;
+  transform: scale(0.95); transition: transform 0.3s ease;
+}
+.modal-backdrop.active .modal-card { transform: scale(1); }
+
+/* Čtvercový obrázek 1:1 */
+.image-container { position: relative; width: 100%; aspect-ratio: 1 / 1; flex-shrink: 0; background: #eee; }
+#detail-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Kulatý křížek se stínem přímo v obrázku */
+.close-card-btn {
+  position: absolute; top: 15px; right: 15px; width: 34px; height: 34px; border-radius: 50%;
+  background: white; border: none; display: flex; justify-content: center; align-items: center;
+  font-size: 16px; color: #333; cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 10;
+}
+
+/* Rolovací textová část pod obrázkem */
+.modal-content { padding: 25px; overflow-y: auto; flex: 1; }
+
+#detail-name { font-family: 'Ubuntu', sans-serif; font-size: 26px; margin: 0 0 5px 0; color: #111; }
+.address { color: #555; font-style: italic; margin-bottom: 20px; font-size: 14px; }
+#detail-bio { line-height: 1.6; color: #333; }
+
+.cleaning-section { background: #f9f9f9; padding: 15px; border-radius: 12px; border: 1px solid #eee; margin: 20px 0; }
+.cleaning-section h3 { margin-top: 0; font-family: 'Ubuntu', sans-serif; font-size: 18px; }
+.cleaning-section input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; font-family: 'Open Sans', sans-serif; border: 1px solid #ccc; border-radius: 6px; }
+.save-btn { width: 100%; padding: 12px; background: var(--hlavni-okraj); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-family: 'Ubuntu', sans-serif; transition: background 0.2s;}
 .save-btn:hover { background: #333; }
-.more-link { display: inline-block; margin-top: 10px; color: var(--hlavni-okraj); font-weight: bold; }
+.more-link { display: inline-block; margin-top: 10px; color: var(--hlavni-okraj); font-weight: bold; text-decoration: none; }
+.more-link:hover { text-decoration: underline; }
