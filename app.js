@@ -29,6 +29,7 @@ const DOM = {
   mapContainer: document.getElementById('map'),
   hamburgerBtn: document.getElementById('hamburger-btn'),
   mobileMenu: document.getElementById('mobile-menu'),
+  headerHamburgerBtn: document.getElementById('header-hamburger-btn'),
   
   // Prvky pro vyhledávání
   btnSearchToggle: document.getElementById('btn-search-toggle'),
@@ -71,7 +72,7 @@ function saveData(id, dateIso) {
 }
 
 // ==========================================
-// 3. LOGIKA BAREV (Čistý text bez emoji)
+// 3. LOGIKA BAREV
 // ==========================================
 function formatCz(iso) {
   if (!iso) return '';
@@ -203,7 +204,6 @@ DOM.btnStav.addEventListener('click', () => {
   renderMarkers();
 });
 
-// Modální okno s detaily
 function openDetail(stone) {
   currentStone = stone;
   DOM.photo.src = stone.photo || "";
@@ -298,6 +298,10 @@ const pages = document.querySelectorAll('.page');
 if (DOM.hamburgerBtn) {
   DOM.hamburgerBtn.addEventListener('click', () => DOM.mobileMenu.classList.toggle('open'));
 }
+if (DOM.headerHamburgerBtn) {
+  DOM.headerHamburgerBtn.addEventListener('click', () => DOM.mobileMenu.classList.toggle('open'));
+}
+
 map.on('click', () => DOM.mobileMenu.classList.remove('open'));
 document.getElementById('page-uvod').addEventListener('click', () => DOM.mobileMenu.classList.remove('open'));
 
@@ -315,7 +319,10 @@ navButtons.forEach(btn => {
     DOM.mobileMenu.classList.remove('open');
 
     if (targetId === 'map-wrapper') {
+      document.body.classList.add('map-active');
       setTimeout(() => { map.invalidateSize(); }, 100);
+    } else {
+      document.body.classList.remove('map-active');
     }
   });
 });
