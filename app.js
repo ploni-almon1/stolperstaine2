@@ -16,7 +16,7 @@ const db = firebase.firestore();
 let appStones = []; 
 
 const DOM = {
-  panel: document.getElementById('detail-panel'),
+  backdrop: document.getElementById('detail-backdrop'),
   photo: document.getElementById('detail-photo'),
   name: document.getElementById('detail-name'),
   address: document.getElementById('detail-address'),
@@ -71,7 +71,7 @@ function saveData(id, dateIso) {
 }
 
 // ==========================================
-// 3. LOGIKA BAREV
+// 3. LOGIKA BAREV (Čistý text bez emoji)
 // ==========================================
 function formatCz(iso) {
   if (!iso) return '';
@@ -203,30 +203,31 @@ DOM.btnStav.addEventListener('click', () => {
   renderMarkers();
 });
 
+// Modální okno s detaily
 function openDetail(stone) {
   currentStone = stone;
   DOM.photo.src = stone.photo || "";
   DOM.name.textContent = stone.name;
-  DOM.address.textContent = '📍 ' + stone.address;
+  DOM.address.textContent = stone.address;
   DOM.bio.textContent = stone.bio || "Zde budou informace o osobě...";
   
   const s = getCleaningStatus(stone.lastCleaned);
-  if (s === 'needs-cleaning') DOM.cleaned.textContent = '🧹 Potřebuje očistit!';
-  else DOM.cleaned.textContent = `🧹 Naposledy čištěno ${formatCz(stone.lastCleaned)}`;
+  if (s === 'needs-cleaning') DOM.cleaned.textContent = 'Potřebuje očistit.';
+  else DOM.cleaned.textContent = `Naposledy čištěno ${formatCz(stone.lastCleaned)}.`;
   
   DOM.dateInput.value = stone.lastCleaned || "";
   DOM.feedback.classList.add('hidden');
-  DOM.panel.classList.add('active');
+  DOM.backdrop.classList.add('active');
 }
 
-document.getElementById('close-detail').onclick = () => DOM.panel.classList.remove('active');
+document.getElementById('close-detail').onclick = () => DOM.backdrop.classList.remove('active');
 
 document.getElementById('cleaning-form').onsubmit = (e) => {
   e.preventDefault();
   if (!currentStone || !DOM.dateInput.value) return;
   saveData(currentStone.id, DOM.dateInput.value);
-  DOM.cleaned.textContent = `🧹 Naposledy čištěno ${formatCz(DOM.dateInput.value)}`;
-  DOM.feedback.textContent = '✓ Uloženo';
+  DOM.cleaned.textContent = `Naposledy čištěno ${formatCz(DOM.dateInput.value)}.`;
+  DOM.feedback.textContent = 'Uloženo.';
   DOM.feedback.style.color = '#27ae60';
   DOM.feedback.classList.remove('hidden');
   setTimeout(() => DOM.feedback.classList.add('hidden'), 2500);
@@ -241,7 +242,6 @@ map.on('locationfound', (e) => {
 // ==========================================
 // 6. VYHLEDÁVÁNÍ (LUPA A NAŠEPTÁVAČ)
 // ==========================================
-// Pomocná funkce pro odstranění háčků a čárek při hledání
 const normalize = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
 DOM.btnSearchToggle.addEventListener('click', () => {
@@ -259,13 +259,11 @@ DOM.searchInput.addEventListener('input', (e) => {
   const query = normalize(e.target.value);
   DOM.searchSuggestions.innerHTML = '';
   
-  // Hledáme až od 2 napsaných znaků
   if (query.length < 2) {
     DOM.searchSuggestions.classList.add('hidden');
     return;
   }
   
-  // Vyfiltrujeme kameny, jejichž jméno obsahuje hledaný text
   const matches = appStones.filter(stone => normalize(stone.name).includes(query));
   
   if (matches.length > 0) {
@@ -274,14 +272,12 @@ DOM.searchInput.addEventListener('input', (e) => {
       const li = document.createElement('li');
       li.textContent = stone.name;
       
-      // Co se stane, když uživatel klikne na jméno v našeptávači
       li.addEventListener('click', () => {
         DOM.searchInput.value = '';
         DOM.searchBox.classList.remove('active');
         DOM.btnSearchToggle.classList.remove('active');
         DOM.searchSuggestions.classList.add('hidden');
         
-        // Přesun kamery a otevření detailu
         map.flyTo([stone.lat, stone.lng], 18, { duration: 1.5 });
         openDetail(stone);
       });
