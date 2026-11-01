@@ -82,31 +82,36 @@
       <button class="icon-btn mobile-only" id="hamburger-btn"><i class="fas fa-bars"></i></button>
     </div>
     
-    <!-- Boční panel s detaily -->
-    <div id="detail-panel" class="panel">
-      <button id="close-detail" class="close-btn"><i class="fas fa-times"></i></button>
-      <img id="detail-photo" src="" alt="Fotografie kamene">
-      <h2 id="detail-name">Jméno</h2>
-      <p id="detail-address" class="address">📍 Adresa</p>
-      <p id="detail-bio">Zde budou informace o osobě...</p>
-      
-      <hr>
-      
-      <div class="cleaning-section">
-        <h3>Údržba kamene</h3>
-        <p id="detail-cleaned">🧹 Zjišťuji stav...</p>
-        
-        <form id="cleaning-form">
-          <label for="cleaning-date">Zaznamenat nové čištění:</label>
-          <input type="date" id="cleaning-date" required>
-          <button type="submit" class="save-btn">Uložit online</button>
-        </form>
-        <div id="cleaning-feedback" class="hidden"></div>
+  <!-- Modální okno s detaily (překryvná karta) -->
+    <div id="detail-backdrop" class="modal-backdrop">
+      <div class="modal-card">
+        <div class="image-container">
+          <img id="detail-photo" src="" alt="Fotografie kamene">
+          <button id="close-detail" class="close-card-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-content">
+          <h2 id="detail-name">Jméno</h2>
+          <p id="detail-address" class="address">Adresa</p>
+          <p id="detail-bio">Zde budou informace o osobě...</p>
+          
+          <hr>
+          
+          <div class="cleaning-section">
+            <h3>Údržba kamene</h3>
+            <p id="detail-cleaned">Zjišťuji stav...</p>
+            
+            <form id="cleaning-form">
+              <label for="cleaning-date">Zaznamenat nové čištění:</label>
+              <input type="date" id="cleaning-date" required>
+              <button type="submit" class="save-btn">Uložit online</button>
+            </form>
+            <div id="cleaning-feedback" class="hidden"></div>
+          </div>
+          
+          <a id="detail-link" href="#" target="_blank" class="more-link">Více informací</a>
+        </div>
       </div>
-      
-      <a id="detail-link" href="#" target="_blank" class="more-link">Více informací</a>
     </div>
-  </div>
 
   <!-- Skripty -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
