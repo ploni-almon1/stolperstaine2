@@ -105,8 +105,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap'
 }).addTo(map);
 
+// Už potřebujeme jen jednu inteligentní vrstvu pro obojí!
 const markersGroup = L.markerClusterGroup();
-const cleaningGroup = L.layerGroup();
+map.addLayer(markersGroup);
 
 const CustomToolbar = L.Control.extend({
   options: { position: 'topleft' },
@@ -145,63 +146,37 @@ map.addControl(new CustomToolbar());
 // ==========================================
 function renderMarkers() {
   const isCleaningMode = DOM.btnStav.classList.contains('active');
-
-  if (map.hasLayer(markersGroup)) map.removeLayer(markersGroup);
-  if (map.hasLayer(cleaningGroup)) map.removeLayer(cleaningGroup);
   
+  // Vyčistíme všechny body a nasypeme je tam znovu podle aktuálního režimu
   markersGroup.clearLayers();
-  cleaningGroup.clearLayers();
 
-  if (isCleaningMode) {
-    map.addLayer(cleaningGroup);
-    const groupsByCoords = {};
+  appStones.forEach(stone => {
+    let iconHtml = '';
     
-    appStones.forEach(stone => {
-      const key = `${stone.lat},${stone.lng}`;
-      if (!groupsByCoords[key]) groupsByCoords[key] = [];
-      groupsByCoords[key].push(stone);
+    // Zjistíme, jaký vzhled bodu vykreslit
+    if (isCleaningMode) {
+      const statusClass = getCleaningStatus(stone.lastCleaned);
+      iconHtml = `<div class="${statusClass}"></div>`;
+    } else {
+      iconHtml = `<div class="stone-icon-default"></div>`;
+    }
+
+    const icon = L.divIcon({
+      className: '', 
+      html: iconHtml, 
+      iconSize: [14, 14], 
+      iconAnchor: [7, 7]
     });
 
-    Object.values(groupsByCoords).forEach(group => {
-      const size = group.length;
-      group.forEach((stone, index) => {
-        let anchor = [7, 7];
-        if (size > 1) {
-          const angle = index * (2 * Math.PI / size);
-          const radius = 12; 
-          const offsetX = Math.cos(angle) * radius;
-          const offsetY = Math.sin(angle) * radius;
-          anchor = [7 - offsetX, 7 - offsetY];
-        }
-
-        const statusClass = getCleaningStatus(stone.lastCleaned);
-        const icon = L.divIcon({
-          className: '', html: `<div class="${statusClass}"></div>`, iconSize: [14, 14], iconAnchor: anchor
-        });
-
-        L.marker([stone.lat, stone.lng], { icon })
-          .addTo(cleaningGroup)
-          .on('click', () => openDetail(stone));
-      });
-    });
-
-  } else {
-    map.addLayer(markersGroup);
-    
-    appStones.forEach(stone => {
-      const icon = L.divIcon({
-        className: '', html: `<div class="stone-icon-default"></div>`, iconSize: [14, 14], iconAnchor: [7, 7]
-      });
-      L.marker([stone.lat, stone.lng], { icon })
-        .addTo(markersGroup)
-        .on('click', () => openDetail(stone));
-    });
-  }
+    L.marker([stone.lat, stone.lng], { icon })
+      .addTo(markersGroup)
+      .on('click', () => openDetail(stone));
+  });
 }
 
 DOM.btnStav.addEventListener('click', () => {
   DOM.btnStav.classList.toggle('active');
-  renderMarkers();
+  renderMarkers(); // Přerenderuje mapu novým stylem, ale se zachováním stejné chytré cluster skupiny
 });
 
 function openDetail(stone) {
@@ -279,7 +254,9 @@ DOM.searchInput.addEventListener('input', (e) => {
         DOM.searchSuggestions.classList.add('hidden');
         
         map.flyTo([stone.lat, stone.lng], 18, { duration: 1.5 });
-        openDetail(stone);
+        
+        // Timeout zaručí, že se pavouk stihne rozbalit (nebo kamera přiletět), než okno otevřeme
+        setTimeout(() => { openDetail(stone); }, 800);
       });
       
       DOM.searchSuggestions.appendChild(li);
