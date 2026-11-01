@@ -22,9 +22,9 @@
   <!-- Náš vlastní styl -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="map-active">
 
-  <!-- Horní navigační lišta (na mobilu se úplně schová) -->
+  <!-- Horní navigační lišta (na mobilu se schová jen na mapě) -->
   <header class="top-nav">
     <div class="logo">
       <div class="logo-icon">
@@ -34,6 +34,9 @@
       <h1>Stolpersteine <span class="fw-normal">mapa</span></h1>
     </div>
     
+    <!-- Tlačítko menu pouze pro hlavičku na mobilu -->
+    <button class="icon-btn mobile-only" id="header-hamburger-btn" style="border: none; box-shadow: none; background: transparent; font-size: 24px; width: auto; height: auto; padding: 0;"><i class="fas fa-bars"></i></button>
+
     <nav class="nav-links desktop-only">
       <a href="#" class="nav-btn" data-target="page-uvod">Úvod</a>
       <a href="#" class="nav-btn active" data-target="map-wrapper">Mapa</a>
@@ -82,7 +85,7 @@
       <button class="icon-btn mobile-only" id="hamburger-btn"><i class="fas fa-bars"></i></button>
     </div>
     
-  <!-- Modální okno s detaily (překryvná karta) -->
+    <!-- Modální okno s detaily (překryvná karta) -->
     <div id="detail-backdrop" class="modal-backdrop">
       <div class="modal-card">
         <div class="image-container">
@@ -112,6 +115,7 @@
         </div>
       </div>
     </div>
+  </div>
 
   <!-- Skripty -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
