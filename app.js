@@ -204,8 +204,13 @@ DOM.btnStav.addEventListener('click', () => {
 });
 
 // ==========================================
-// 6. UDÁLOSTI PANELU A MAPY
+// 6. UDÁLOSTI A MENU
 // ==========================================
+if (DOM.hamburgerBtn) {
+  DOM.hamburgerBtn.addEventListener('click', () => DOM.mobileMenu.classList.toggle('open'));
+}
+map.on('click', () => DOM.mobileMenu.classList.remove('open'));
+
 function openDetail(stone) {
   currentStone = stone;
   DOM.photo.src = stone.photo || "";
@@ -241,46 +246,4 @@ map.on('locationfound', (e) => {
   else userLocationMarker = L.circleMarker(e.latlng, { color: '#3498db', fillColor: '#3498db', fillOpacity: 1, radius: 8, weight: 3 }).addTo(map);
 });
 
-// ==========================================
-// 7. PŘEPÍNÁNÍ ZÁLOŽEK A MOBILNÍ MENU
-// ==========================================
-const navButtons = document.querySelectorAll('.nav-btn');
-const pages = document.querySelectorAll('.page');
-
-// Kliknutí na hamburger tlačítko na mobilu
-if (DOM.hamburgerBtn) {
-  DOM.hamburgerBtn.addEventListener('click', () => DOM.mobileMenu.classList.toggle('open'));
-}
-
-// Skrytí menu při kliknutí kamkoliv jinam
-map.on('click', () => DOM.mobileMenu.classList.remove('open'));
-document.getElementById('page-uvod').addEventListener('click', () => DOM.mobileMenu.classList.remove('open'));
-
-// Samotné přepínání obrazovek
-navButtons.forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    const targetId = btn.getAttribute('data-target');
-    if (!targetId) return; // Ignoruje tlačítka bez cíle (Seznam, Další)
-    
-    e.preventDefault();
-
-    // 1. Obarvení aktivního tlačítka v menu
-    navButtons.forEach(b => b.classList.remove('active'));
-    document.querySelectorAll(`.nav-btn[data-target="${targetId}"]`).forEach(b => b.classList.add('active'));
-
-    // 2. Přepnutí HTML stránek
-    pages.forEach(p => p.classList.remove('active'));
-    document.getElementById(targetId).classList.add('active');
-
-    // 3. Zavření mobilního menu
-    DOM.mobileMenu.classList.remove('open');
-
-    // 4. Pokud se vracíme na mapu, přinutíme ji překreslit se do plné velikosti
-    if (targetId === 'map-wrapper') {
-      setTimeout(() => { map.invalidateSize(); }, 100);
-    }
-  });
-});
-
-// Start aplikace
 loadSavedData();
