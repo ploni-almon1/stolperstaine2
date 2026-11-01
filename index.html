@@ -2,7 +2,6 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8">
-  <!-- Přidáno viewport-fit=cover pro roztažení mapy až pod status bar -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#ffffff">
   <title>Stolpersteine Mapa</title>
@@ -36,57 +35,77 @@
     </div>
     
     <nav class="nav-links desktop-only">
-      <a href="#">Úvod</a>
-      <a href="#" class="active">Mapa</a>
-      <a href="#">Seznam</a>
-      <a href="#">Další</a>
+      <a href="#" class="nav-btn" data-target="page-uvod">Úvod</a>
+      <a href="#" class="nav-btn active" data-target="map-wrapper">Mapa</a>
+      <a href="#" class="nav-btn">Seznam</a>
+      <a href="#" class="nav-btn">Další</a>
     </nav>
   </header>
 
   <!-- Mobilní rozbalovací menu -->
   <nav class="mobile-menu" id="mobile-menu">
-    <a href="#">Úvod</a>
-    <a href="#" class="active">Mapa</a>
-    <a href="#">Seznam</a>
-    <a href="#">Další</a>
+    <a href="#" class="nav-btn" data-target="page-uvod">Úvod</a>
+    <a href="#" class="nav-btn active" data-target="map-wrapper">Mapa</a>
+    <a href="#" class="nav-btn">Seznam</a>
+    <a href="#" class="nav-btn">Další</a>
   </nav>
 
-  <!-- Obal pro mapu -->
-  <div id="map-wrapper">
-    <div id="map" class="grayscale-tiles"></div>
-    
-    <!-- Plovoucí prvky vpravo nahoře -->
-    <div class="top-right-controls">
-      <button class="icon-btn desktop-only" title="Hledat"><i class="fas fa-search"></i></button>
-      <button id="btn-stav" class="pill-btn">stav</button>
-      <!-- Hamburger tlačítko plave na mobilu vpravo nahoře -->
-      <button class="icon-btn mobile-only" id="hamburger-btn"><i class="fas fa-bars"></i></button>
+  <!-- STRÁNKA 1: ÚVOD -->
+  <div id="page-uvod" class="page">
+    <div class="content-container">
+      <h2>Stolpersteine Olomouc</h2>
+      <p>S myšlenkou připomenout oběti holokaustu umístěním pamětního kamene před dům, kde před deportací do koncentračního tábora žil člověk zavražděný nacisty, přišel v letech 1993/94 německý umělec Gunter Demnig. Nápad přenést tento projekt do České republiky vzešel z prostředí České unie židovské mládeže, přičemž první kameny byly položeny v pražských chodnících v říjnu 2008. Židovská obec Olomouc pak začala kameny Stolpersteine pokládat v Olomouci od roku 2011. <strong>V případě zájmu o položení kamenů Stolpersteine kontaktujte <a href="mailto:kehila@kehila-olomouc.cz">kehila@kehila-olomouc.cz</a>.</strong></p>
+      
+      <p><a href="https://www.stolpersteine.eu/" target="_blank">Stolpersteine</a>, <strong>jsou betonové kostky o rozměrech 10 x 10 x 10 cm s nápisem na mosazné destičce na vrchu, vyzývají kolemjdoucí, aby se zastavili a vzdali úctu jménu oběti vyrytému na kameni.</strong></p>
+      
+      <p>K říjnu 2026 se v Olomouci nachází <strong>432 kamenů</strong>.</p>
+      
+      <p><a href="https://www.youtube.com/watch?v=VO4xv4_vgj8" target="_blank">Jak čistit Stolpersteine.</a></p>
     </div>
   </div>
 
-  <!-- Boční panel s detaily -->
-  <div id="detail-panel" class="panel">
-    <button id="close-detail" class="close-btn"><i class="fas fa-times"></i></button>
-    <img id="detail-photo" src="" alt="Fotografie kamene">
-    <h2 id="detail-name">Jméno</h2>
-    <p id="detail-address" class="address">📍 Adresa</p>
-    <p id="detail-bio">Zde budou informace o osobě...</p>
+  <!-- STRÁNKA 2: MAPA -->
+  <div id="map-wrapper" class="page active">
+    <div id="map" class="grayscale-tiles"></div>
     
-    <hr>
-    
-    <div class="cleaning-section">
-      <h3>Údržba kamene</h3>
-      <p id="detail-cleaned">🧹 Zjišťuji stav...</p>
+    <!-- Plovoucí ovládací prvky vpravo nahoře -->
+    <div class="top-right-controls">
       
-      <form id="cleaning-form">
-        <label for="cleaning-date">Zaznamenat nové čištění:</label>
-        <input type="date" id="cleaning-date" required>
-        <button type="submit" class="save-btn">Uložit online</button>
-      </form>
-      <div id="cleaning-feedback" class="hidden"></div>
+      <!-- Skrytý vyhledávací panel -->
+      <div class="search-box" id="search-box">
+        <input type="text" id="search-input" placeholder="Hledat jméno..." autocomplete="off">
+        <ul id="search-suggestions" class="suggestions-list hidden"></ul>
+      </div>
+
+      <button class="icon-btn" id="btn-search-toggle" title="Hledat"><i class="fas fa-search"></i></button>
+      <button id="btn-stav" class="pill-btn">stav</button>
+      <button class="icon-btn mobile-only" id="hamburger-btn"><i class="fas fa-bars"></i></button>
     </div>
     
-    <a id="detail-link" href="#" target="_blank" class="more-link">Více informací</a>
+    <!-- Boční panel s detaily -->
+    <div id="detail-panel" class="panel">
+      <button id="close-detail" class="close-btn"><i class="fas fa-times"></i></button>
+      <img id="detail-photo" src="" alt="Fotografie kamene">
+      <h2 id="detail-name">Jméno</h2>
+      <p id="detail-address" class="address">📍 Adresa</p>
+      <p id="detail-bio">Zde budou informace o osobě...</p>
+      
+      <hr>
+      
+      <div class="cleaning-section">
+        <h3>Údržba kamene</h3>
+        <p id="detail-cleaned">🧹 Zjišťuji stav...</p>
+        
+        <form id="cleaning-form">
+          <label for="cleaning-date">Zaznamenat nové čištění:</label>
+          <input type="date" id="cleaning-date" required>
+          <button type="submit" class="save-btn">Uložit online</button>
+        </form>
+        <div id="cleaning-feedback" class="hidden"></div>
+      </div>
+      
+      <a id="detail-link" href="#" target="_blank" class="more-link">Více informací</a>
+    </div>
   </div>
 
   <!-- Skripty -->
