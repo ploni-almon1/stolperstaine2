@@ -7,10 +7,6 @@
 
   <title>Stolpersteine Mapa</title>
 
-  <!-- PWA: Manifest a ikona pro Apple zařízení -->
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-192.png">
-
   <!-- Google Fonty -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -207,17 +203,6 @@
   <!-- Vlastní data a aplikace -->
   <script src="data.js"></script>
   <script src="app.js"></script>
-
-  <!-- PWA: Registrace Service Workeru -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .then(reg => console.log('SW registrován'))
-          .catch(err => console.log('Chyba SW', err));
-      });
-    }
-  </script>
 
 </body>
 </html>
