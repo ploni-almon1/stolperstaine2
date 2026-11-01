@@ -143,6 +143,40 @@ body, html {
   transition: filter 0.5s ease;
 }
 
+/* Zrušení všech výchozích Leaflet okrajů a stínů */
+.leaflet-bar { border: none !important; box-shadow: none !important; background: transparent !important; }
+
+/* Vyčištění mezer mezi celými bloky tlačítek */
+.leaflet-left .leaflet-control { margin-left: 20px !important; margin-bottom: 0 !important; }
+.leaflet-top .leaflet-control { margin-top: 12px !important; } /* Fixní mezera 12px mezi skupinou zoomu a skupinou naší */
+.leaflet-top .leaflet-control:first-child { margin-top: 20px !important; } /* Úplně první tlačítko nahoře má 20px od okraje */
+
+/* Zajištění, že KAŽDÉ tlačítko (+, -, vrstvy, terč) vypadá stejně a má pod sebou 12px */
+.leaflet-bar a,
+.leaflet-touch .leaflet-bar a {
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 34px !important;
+  border-radius: 50% !important;
+  border: 1.5px solid var(--hlavni-okraj) !important;
+  background-color: white !important;
+  color: #000 !important;
+  margin: 0 0 12px 0 !important; /* Přesná 12px mezera pod KAŽDÝM tlačítkem */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-decoration: none;
+}
+
+/* Úplně poslední tlačítko v každém bloku (mínus a terč) nebude mít spodní mezeru, 
+   aby se nesečetla s mezerou celého bloku */
+.leaflet-bar a:last-child {
+  margin-bottom: 0 !important; 
+}
+
+.leaflet-bar a:hover { background-color: #f4f4f4 !important; }
+
 /* Zrušení všech výchozích Leaflet okrajů */
 .leaflet-bar { border: none !important; box-shadow: none !important; background: transparent !important; }
 
