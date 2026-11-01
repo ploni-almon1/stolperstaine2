@@ -206,7 +206,9 @@ DOM.btnStav.addEventListener('click', () => {
 // ==========================================
 // 6. UDÁLOSTI A MENU
 // ==========================================
-DOM.hamburgerBtn.addEventListener('click', () => DOM.mobileMenu.classList.toggle('open'));
+if (DOM.hamburgerBtn) {
+  DOM.hamburgerBtn.addEventListener('click', () => DOM.mobileMenu.classList.toggle('open'));
+}
 map.on('click', () => DOM.mobileMenu.classList.remove('open'));
 
 function openDetail(stone) {
