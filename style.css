@@ -72,13 +72,22 @@ body, html {
   .mobile-only { display: flex !important; }
   .top-nav { display: none !important; }
   .leaflet-top .leaflet-control:first-child { margin-top: calc(20px + env(safe-area-inset-top, 20px)) !important; }
-  .top-right-controls { top: calc(20px + env(safe-area-inset-top, 20px)) !important; }
+  
   #page-uvod { padding-top: calc(40px + env(safe-area-inset-top, 20px)); }
   .panel { width: 100%; left: -100%; top: 0; height: 100%; z-index: 2005; }
   
-  /* OPRAVA: Dynamické zkrácení vyhledávání, aby začínalo přesně u levých ikon */
-  #search-input { width: calc(100vw - 250px) !important; }
-  .suggestions-list { width: calc(100vw - 250px) !important; }
+  /* OPRAVA: Plovoucí prvky se roztáhnou od pravého až k levému okraji (přesně nad tlačítko +) */
+  .top-right-controls { 
+    top: calc(20px + env(safe-area-inset-top, 20px)) !important; 
+    left: 20px !important; /* Zarovná levý okraj na pixel přesně s + tlačítkem */
+    right: 20px !important; 
+    justify-content: flex-end !important; /* Ostatní tlačítka zůstanou natlačená vpravo */
+  }
+  
+  /* Vyhledávací pole vyplní veškerý volný prostor až do levého okraje */
+  .search-box.active { flex: 1 !important; display: block !important; }
+  #search-input { width: 100% !important; }
+  .suggestions-list { width: 100% !important; }
 }
 
 /* ------------------------------------- */
