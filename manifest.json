@@ -2,9 +2,9 @@
   "name": "Stolpersteine Mapa",
   "short_name": "Stolpersteine",
   "start_url": "./",
-  "display": "fullscreen",
+  "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "theme_color": "#EFCA08",
   "icons": [
     {
       "src": "icon-192.png",
