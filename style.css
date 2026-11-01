@@ -1,4 +1,4 @@
-:root { 
+:root {
   --hlavni-barva: #EFCA08; 
   --hlavni-okraj: #000000;
 }
@@ -10,7 +10,7 @@ button:focus, a:focus { outline: none !important; }
 
 body, html {
   margin: 0; padding: 0; height: 100dvh; 
-  font-family: 'Inter', sans-serif; /* Aplikován nový font Inter */
+  font-family: 'Inter', sans-serif;
   display: flex; flex-direction: column; overflow: hidden;
 }
 
@@ -25,14 +25,13 @@ body, html {
 .content-container { 
   max-width: 750px; margin: 0 auto; 
   font-size: 17px; line-height: 1.6; color: #333333; 
-  text-align: left; /* Zarovnání striktně doleva */
-  width: 100%; box-sizing: border-box; word-break: break-word; /* Zabrání přetečení dlouhých e-mailů a slov */
+  text-align: left; 
+  width: 100%; box-sizing: border-box; word-break: break-word; 
 }
 
 .content-container h2 { font-family: 'Ubuntu', sans-serif; font-size: 38px; color: #0b1a30; margin-top: 0; margin-bottom: 25px; line-height: 1.2; }
 .content-container p { margin-bottom: 22px; }
 
-/* Nový moderní design odkazů (černý text, žluté podtržení) */
 .content-container a { 
   color: var(--hlavni-okraj); 
   text-decoration: none; 
@@ -87,18 +86,15 @@ body, html {
   .desktop-only { display: none !important; }
   .mobile-only { display: flex !important; }
   
-  /* CHYTRÉ ZOBRAZOVÁNÍ HORNÍ LIŠTY (Závisí na aktivní záložce) */
   body.map-active .top-nav { display: none !important; }
   body:not(.map-active) .top-nav { display: flex !important; padding: 0 20px; }
   
-  /* Pevné odsazení pro text na mobilu, aby se vešel na displej */
   body:not(.map-active) .mobile-menu { padding-top: calc(65px + env(safe-area-inset-top, 0px)); }
   body:not(.map-active) #page-uvod { padding: 25px 20px 50px 20px !important; }
   body.map-active #page-uvod { padding-top: calc(40px + env(safe-area-inset-top, 20px)); }
 
   .leaflet-top .leaflet-control:first-child { margin-top: calc(20px + env(safe-area-inset-top, 20px)) !important; }
   
-  /* Plovoucí prvky se roztáhnou od pravého až k levému okraji (přesně nad tlačítko +) */
   .top-right-controls { 
     top: calc(20px + env(safe-area-inset-top, 20px)) !important; 
     left: 20px !important; 
@@ -106,7 +102,6 @@ body, html {
     justify-content: flex-end !important; 
   }
   
-  /* Vyhledávací pole vyplní veškerý volný prostor až do levého okraje */
   .search-box.active { flex: 1 !important; display: block !important; }
   #search-input { width: 100% !important; }
   .suggestions-list { width: 100% !important; }
@@ -151,7 +146,6 @@ body, html {
 #btn-stav.active { background-color: var(--hlavni-barva); }
 #btn-search-toggle.active { background-color: var(--hlavni-barva); }
 
-/* Okno pro vyhledávání */
 .search-box { display: none; position: relative; }
 .search-box.active { display: block; }
 #search-input {
@@ -159,7 +153,7 @@ body, html {
   border-radius: 19px; border: 1.5px solid var(--hlavni-okraj); padding: 0 15px; width: 200px;
   font-family: 'Inter', sans-serif; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); box-sizing: border-box !important;
 }
-/* Našeptávač (rolovací seznam) */
+
 .suggestions-list {
   position: absolute; top: 42px; right: 0; width: 200px; background: white; border: 1.5px solid var(--hlavni-okraj);
   border-radius: 8px; list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto;
@@ -198,11 +192,9 @@ body, html {
 }
 .modal-backdrop.active .modal-card { transform: scale(1); }
 
-/* Čtvercový obrázek 1:1 */
 .image-container { position: relative; width: 100%; aspect-ratio: 1 / 1; flex-shrink: 0; background: #eee; }
 #detail-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-/* Kulatý křížek se stínem přímo v obrázku */
 .close-card-btn {
   position: absolute; top: 15px; right: 15px; width: 34px; height: 34px; border-radius: 50%;
   background: white; border: none; display: flex; justify-content: center; align-items: center;
@@ -210,9 +202,7 @@ body, html {
   box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 10;
 }
 
-/* Rolovací textová část pod obrázkem */
 .modal-content { padding: 25px; overflow-y: auto; flex: 1; }
-
 #detail-name { font-family: 'Ubuntu', sans-serif; font-size: 26px; margin: 0 0 5px 0; color: #111; }
 .address { color: #555; font-style: italic; margin-bottom: 20px; font-size: 14px; }
 #detail-bio { line-height: 1.6; color: #333; }
@@ -224,3 +214,32 @@ body, html {
 .save-btn:hover { background: #333; }
 .more-link { display: inline-block; margin-top: 10px; color: var(--hlavni-okraj); font-weight: bold; text-decoration: none; border-bottom: 2px solid var(--hlavni-barva); padding-bottom: 1px; }
 .more-link:hover { background-color: var(--hlavni-barva); }
+
+/* ------------------------------------- */
+/* NOVÝ MODERNÍ VZHLED SHLUKŮ (CLUSTERS) */
+/* ------------------------------------- */
+/* Smažeme výchozí průhledný obal knihovny Leaflet */
+.marker-cluster, .marker-cluster-small, .marker-cluster-medium, .marker-cluster-large {
+  background: transparent !important;
+}
+/* Uděláme všechna kolečka perfektně stejná, s černým okrajem a žlutá */
+.marker-cluster div {
+  background-color: var(--hlavni-barva) !important;
+  border: 1.5px solid var(--hlavni-okraj) !important;
+  color: #000 !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  margin-left: 4px !important;
+  margin-top: 4px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+.marker-cluster span {
+  line-height: 1 !important;
+}
