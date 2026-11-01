@@ -1,5 +1,5 @@
 // ==========================================
-// 1. INICIALIZACE FIREBASE 
+// 1. INICIALIZACE FIREBASE
 // ==========================================
 const firebaseConfig = {
   apiKey: "AIzaSyAQFAJsupGxZykuNzHOsYHgm7ROqTIldZQ",
@@ -28,7 +28,13 @@ const DOM = {
   btnStav: document.getElementById('btn-stav'),
   mapContainer: document.getElementById('map'),
   hamburgerBtn: document.getElementById('hamburger-btn'),
-  mobileMenu: document.getElementById('mobile-menu')
+  mobileMenu: document.getElementById('mobile-menu'),
+  
+  // Prvky pro vyhledávání
+  btnSearchToggle: document.getElementById('btn-search-toggle'),
+  searchBox: document.getElementById('search-box'),
+  searchInput: document.getElementById('search-input'),
+  searchSuggestions: document.getElementById('search-suggestions')
 };
 
 DOM.dateInput.max = new Date().toISOString().split("T")[0];
@@ -134,7 +140,7 @@ const CustomToolbar = L.Control.extend({
 map.addControl(new CustomToolbar());
 
 // ==========================================
-// 5. VYKRESLOVÁNÍ KAMENŮ
+// 5. VYKRESLOVÁNÍ KAMENŮ A DETAIL
 // ==========================================
 function renderMarkers() {
   const isCleaningMode = DOM.btnStav.classList.contains('active');
@@ -169,10 +175,7 @@ function renderMarkers() {
 
         const statusClass = getCleaningStatus(stone.lastCleaned);
         const icon = L.divIcon({
-          className: '',
-          html: `<div class="${statusClass}"></div>`,
-          iconSize: [14, 14],
-          iconAnchor: anchor
+          className: '', html: `<div class="${statusClass}"></div>`, iconSize: [14, 14], iconAnchor: anchor
         });
 
         L.marker([stone.lat, stone.lng], { icon })
@@ -186,10 +189,7 @@ function renderMarkers() {
     
     appStones.forEach(stone => {
       const icon = L.divIcon({
-        className: '',
-        html: `<div class="stone-icon-default"></div>`,
-        iconSize: [14, 14],
-        iconAnchor: [7, 7]
+        className: '', html: `<div class="stone-icon-default"></div>`, iconSize: [14, 14], iconAnchor: [7, 7]
       });
       L.marker([stone.lat, stone.lng], { icon })
         .addTo(markersGroup)
@@ -202,14 +202,6 @@ DOM.btnStav.addEventListener('click', () => {
   DOM.btnStav.classList.toggle('active');
   renderMarkers();
 });
-
-// ==========================================
-// 6. UDÁLOSTI A MENU
-// ==========================================
-if (DOM.hamburgerBtn) {
-  DOM.hamburgerBtn.addEventListener('click', () => DOM.mobileMenu.classList.toggle('open'));
-}
-map.on('click', () => DOM.mobileMenu.classList.remove('open'));
 
 function openDetail(stone) {
   currentStone = stone;
@@ -246,4 +238,91 @@ map.on('locationfound', (e) => {
   else userLocationMarker = L.circleMarker(e.latlng, { color: '#3498db', fillColor: '#3498db', fillOpacity: 1, radius: 8, weight: 3 }).addTo(map);
 });
 
+// ==========================================
+// 6. VYHLEDÁVÁNÍ (LUPA A NAŠEPTÁVAČ)
+// ==========================================
+// Pomocná funkce pro odstranění háčků a čárek při hledání
+const normalize = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+DOM.btnSearchToggle.addEventListener('click', () => {
+  DOM.searchBox.classList.toggle('active');
+  DOM.btnSearchToggle.classList.toggle('active');
+  if (DOM.searchBox.classList.contains('active')) {
+    DOM.searchInput.focus();
+  } else {
+    DOM.searchSuggestions.classList.add('hidden');
+    DOM.searchInput.value = '';
+  }
+});
+
+DOM.searchInput.addEventListener('input', (e) => {
+  const query = normalize(e.target.value);
+  DOM.searchSuggestions.innerHTML = '';
+  
+  // Hledáme až od 2 napsaných znaků
+  if (query.length < 2) {
+    DOM.searchSuggestions.classList.add('hidden');
+    return;
+  }
+  
+  // Vyfiltrujeme kameny, jejichž jméno obsahuje hledaný text
+  const matches = appStones.filter(stone => normalize(stone.name).includes(query));
+  
+  if (matches.length > 0) {
+    DOM.searchSuggestions.classList.remove('hidden');
+    matches.forEach(stone => {
+      const li = document.createElement('li');
+      li.textContent = stone.name;
+      
+      // Co se stane, když uživatel klikne na jméno v našeptávači
+      li.addEventListener('click', () => {
+        DOM.searchInput.value = '';
+        DOM.searchBox.classList.remove('active');
+        DOM.btnSearchToggle.classList.remove('active');
+        DOM.searchSuggestions.classList.add('hidden');
+        
+        // Přesun kamery a otevření detailu
+        map.flyTo([stone.lat, stone.lng], 18, { duration: 1.5 });
+        openDetail(stone);
+      });
+      
+      DOM.searchSuggestions.appendChild(li);
+    });
+  } else {
+    DOM.searchSuggestions.classList.add('hidden');
+  }
+});
+
+// ==========================================
+// 7. PŘEPÍNÁNÍ ZÁLOŽEK A MOBILNÍ MENU
+// ==========================================
+const navButtons = document.querySelectorAll('.nav-btn');
+const pages = document.querySelectorAll('.page');
+
+if (DOM.hamburgerBtn) {
+  DOM.hamburgerBtn.addEventListener('click', () => DOM.mobileMenu.classList.toggle('open'));
+}
+map.on('click', () => DOM.mobileMenu.classList.remove('open'));
+document.getElementById('page-uvod').addEventListener('click', () => DOM.mobileMenu.classList.remove('open'));
+
+navButtons.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const targetId = btn.getAttribute('data-target');
+    if (!targetId) return; 
+    
+    e.preventDefault();
+    navButtons.forEach(b => b.classList.remove('active'));
+    document.querySelectorAll(`.nav-btn[data-target="${targetId}"]`).forEach(b => b.classList.add('active'));
+
+    pages.forEach(p => p.classList.remove('active'));
+    document.getElementById(targetId).classList.add('active');
+    DOM.mobileMenu.classList.remove('open');
+
+    if (targetId === 'map-wrapper') {
+      setTimeout(() => { map.invalidateSize(); }, 100);
+    }
+  });
+});
+
+// Start aplikace
 loadSavedData();
