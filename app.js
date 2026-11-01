@@ -241,7 +241,7 @@ function openDetail(stone) {
   DOM.photo.src = stone.photo || "";
   DOM.name.textContent = stone.name;
   DOM.address.textContent = stone.address;
-  DOM.mapyBtn.href = `https://mapy.cz/zakladni?q=${stone.lat}N,${stone.lng}E`;
+  DOM.mapyBtn.href = `https://mapy.com/zakladni?q=${stone.lat}N,${stone.lng}E`;
   DOM.bio.textContent = stone.bio || "Zde budou informace o osobě...";
   
   const s = getCleaningStatus(stone.lastCleaned);
