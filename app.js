@@ -238,7 +238,15 @@ DOM.btnStav.addEventListener('click', () => {
 
 function openDetail(stone) {
   currentStone = stone;
-  DOM.photo.src = stone.photo || "";
+  
+  if (stone.photo) {
+    DOM.photo.src = stone.photo;
+    DOM.photo.style.display = 'block';
+  } else {
+    DOM.photo.src = '';
+    DOM.photo.style.display = 'none';
+  }
+
   DOM.name.textContent = stone.name;
   DOM.address.textContent = stone.address;
   DOM.mapyBtn.href = `https://mapy.com/zakladni?q=${stone.lat}N,${stone.lng}E`;
