@@ -1,5 +1,5 @@
 // ==========================================
-// 1. INICIALIZACE FIREBASE
+// 1. INICIALIZACE FIREBASE 
 // ==========================================
 const firebaseConfig = {
   apiKey: "AIzaSyAQFAJsupGxZykuNzHOsYHgm7ROqTIldZQ",
