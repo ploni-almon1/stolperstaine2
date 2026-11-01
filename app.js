@@ -20,6 +20,7 @@ const DOM = {
   photo: document.getElementById('detail-photo'),
   name: document.getElementById('detail-name'),
   address: document.getElementById('detail-address'),
+  mapyBtn: document.getElementById('detail-mapy-btn'),
   bio: document.getElementById('detail-bio'),
   cleaned: document.getElementById('detail-cleaned'),
   link: document.getElementById('detail-link'),
@@ -240,6 +241,7 @@ function openDetail(stone) {
   DOM.photo.src = stone.photo || "";
   DOM.name.textContent = stone.name;
   DOM.address.textContent = stone.address;
+  DOM.mapyBtn.href = `https://mapy.cz/zakladni?q=${stone.lat}N,${stone.lng}E`;
   DOM.bio.textContent = stone.bio || "Zde budou informace o osobě...";
   
   const s = getCleaningStatus(stone.lastCleaned);
