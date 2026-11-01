@@ -86,25 +86,25 @@ body, html {
   .desktop-only { display: none !important; }
   .mobile-only { display: flex !important; }
   
-  /* Lišta bude viditelná VŽDY - i na mapě */
   .top-nav { 
     display: flex !important; 
     padding: env(safe-area-inset-top, 0px) 20px 0 20px !important; 
     height: calc(65px + env(safe-area-inset-top, 0px)) !important; 
   }
   
-  /* Odsazení stránek a menu pod lištu */
   .mobile-menu { padding-top: calc(65px + env(safe-area-inset-top, 0px)) !important; }
   #page-uvod { padding: 25px 20px 50px 20px !important; }
 
-  /* Mapová tlačítka - stačí 15px mezera od shora, protože nahoře už je lišta */
+  /* Levé ikonky mapy - zarovnání shora */
   .leaflet-top .leaflet-control:first-child { margin-top: 15px !important; }
   
+  /* Horní plovoucí vrstva s hledáním - přesné pozicování přes levé tlačítka */
   .top-right-controls { 
     top: 15px !important; 
-    left: 15px !important; 
-    right: 15px !important; 
+    left: 20px !important; /* Zarovnáno přesně na levou hranu pluska */
+    right: 20px !important; 
     justify-content: flex-end !important; 
+    z-index: 2000 !important; /* Důležité: Tímto překryjeme levou lištu mapy */
   }
   
   .search-box.active { flex: 1 !important; display: block !important; }
@@ -140,11 +140,11 @@ body, html {
 /* ------------------------------------- */
 /* PLOVOUCÍ PRVKY A VYHLEDÁVÁNÍ */
 /* ------------------------------------- */
-.top-right-controls { position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; gap: 12px; align-items: center; }
+.top-right-controls { position: absolute; top: 20px; right: 20px; z-index: 2000; display: flex; gap: 12px; align-items: center; }
 .icon-btn, .pill-btn {
-  background: white; border: 1.5px solid var(--hlavni-okraj); cursor: pointer; display: flex; align-items: center;
+  background: white; border: 1.5px solid var(--hlavni-okraj) !important; cursor: pointer; display: flex; align-items: center;
   justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.15); color: #000; transition: background 0.3s ease;
-  box-sizing: border-box !important; 
+  box-sizing: border-box !important; margin: 0 !important;
 }
 .icon-btn { width: 38px !important; height: 38px !important; border-radius: 50%; font-size: 15px; flex-shrink: 0; }
 .pill-btn { height: 38px !important; border-radius: 19px; padding: 0 20px; font-size: 15px; font-weight: 700; font-family: 'Inter', sans-serif; }
@@ -153,10 +153,16 @@ body, html {
 
 .search-box { display: none; position: relative; }
 .search-box.active { display: block; }
+
+/* Úplné zrušení mobilních deformací a zajištění stejné výšky jako tlačítka */
 #search-input {
   height: 38px !important; 
-  border-radius: 19px; border: 1.5px solid var(--hlavni-okraj); padding: 0 15px; width: 200px;
-  font-family: 'Inter', sans-serif; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); box-sizing: border-box !important;
+  border-radius: 19px; border: 1.5px solid var(--hlavni-okraj) !important; padding: 0 15px; width: 200px;
+  font-family: 'Inter', sans-serif; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); 
+  box-sizing: border-box !important;
+  -webkit-appearance: none !important; /* Odstraní výchozí "nafouknutí" na mobilech */
+  appearance: none !important;
+  margin: 0 !important; /* Zajistí perfektní lícování */
 }
 
 .suggestions-list {
@@ -223,11 +229,9 @@ body, html {
 /* ------------------------------------- */
 /* NOVÝ MODERNÍ VZHLED SHLUKŮ (CLUSTERS) */
 /* ------------------------------------- */
-/* Smažeme výchozí průhledný obal knihovny Leaflet */
 .marker-cluster, .marker-cluster-small, .marker-cluster-medium, .marker-cluster-large {
   background: transparent !important;
 }
-/* Uděláme všechna kolečka perfektně stejná, s černým okrajem a žlutá */
 .marker-cluster div {
   background-color: var(--hlavni-barva) !important;
   border: 1.5px solid var(--hlavni-okraj) !important;
