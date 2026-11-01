@@ -243,3 +243,19 @@ body, html {
 .marker-cluster span {
   line-height: 1 !important;
 }
+
+/* ------------------------------------- */
+/* TLAČÍTKO PRO MAPY.CZ V DETAILU KAMENE */
+/* ------------------------------------- */
+.mapy-btn {
+  background-color: var(--hlavni-barva);
+  text-decoration: none;
+  margin-top: -10px;
+  margin-bottom: 20px;
+  display: inline-flex;
+  width: fit-content;
+  gap: 8px;
+}
+.mapy-btn:hover {
+  background-color: #fce144;
+}
