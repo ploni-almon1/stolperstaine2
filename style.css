@@ -75,6 +75,10 @@ body, html {
   .top-right-controls { top: calc(20px + env(safe-area-inset-top, 20px)) !important; }
   #page-uvod { padding-top: calc(40px + env(safe-area-inset-top, 20px)); }
   .panel { width: 100%; left: -100%; top: 0; height: 100%; z-index: 2005; }
+  
+  /* OPRAVA: Dynamické zkrácení vyhledávání, aby začínalo přesně u levých ikon */
+  #search-input { width: calc(100vw - 250px) !important; }
+  .suggestions-list { width: calc(100vw - 250px) !important; }
 }
 
 /* ------------------------------------- */
