@@ -101,12 +101,53 @@ body, html {
 .leaflet-top .leaflet-control:first-child { margin-top: 20px !important; }
 
 .leaflet-bar a, .leaflet-touch .leaflet-bar a, .leaflet-touch .leaflet-bar a:first-child, .leaflet-touch .leaflet-bar a:last-child {
-  width: 36px !important; height: 36px !important; line-height: 34px !important; border-radius: 50% !important;
-  border: 1.5px solid var(--hlavni-okraj) !important; background-color: white !important; color: #000 !important;
-  margin: 0 0 12px 0 !important; box-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
+  width: 38px !important; 
+  height: 38px !important; 
+  line-height: 35px !important; 
+  border-radius: 50% !important;
+  border: 1.5px solid var(--hlavni-okraj) !important; 
+  background-color: white !important; 
+  color: #000 !important;
+  margin: 0 0 12px 0 !important; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
   display: flex !important; justify-content: center !important; align-items: center !important; text-decoration: none;
+  box-sizing: border-box !important; /* TOTO ZARUČÍ STEJNOU VÝŠKU JAKO MÁ LUPA */
 }
 .leaflet-bar a:hover { background-color: #f4f4f4 !important; }
+
+/* ------------------------------------- */
+/* PLOVOUCÍ PRVKY A VYHLEDÁVÁNÍ */
+/* ------------------------------------- */
+.top-right-controls { position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; gap: 12px; align-items: center; }
+.icon-btn, .pill-btn {
+  background: white; border: 1.5px solid var(--hlavni-okraj); cursor: pointer; display: flex; align-items: center;
+  justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.15); color: #000; transition: background 0.3s ease;
+  box-sizing: border-box !important; /* TOTO ZARUČÍ STEJNOU VÝŠKU */
+}
+.icon-btn { width: 38px !important; height: 38px !important; border-radius: 50%; font-size: 15px; flex-shrink: 0; }
+.pill-btn { height: 38px !important; border-radius: 19px; padding: 0 20px; font-size: 15px; font-weight: 700; font-family: 'Open Sans', sans-serif; }
+#btn-stav.active { background-color: var(--hlavni-barva); }
+#btn-search-toggle.active { background-color: var(--hlavni-barva); }
+
+/* Okno pro vyhledávání */
+.search-box { display: none; position: relative; }
+.search-box.active { display: block; }
+#search-input {
+  height: 38px !important; /* DOKONALE STEJNÁ VÝŠKA */
+  border-radius: 19px; border: 1.5px solid var(--hlavni-okraj); padding: 0 15px; width: 200px;
+  font-family: 'Open Sans', sans-serif; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); box-sizing: border-box !important;
+}
+/* Našeptávač (rolovací seznam) */
+.suggestions-list {
+  position: absolute; top: 42px; right: 0; width: 200px; background: white; border: 1.5px solid var(--hlavni-okraj);
+  border-radius: 8px; list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+.suggestions-list li { padding: 10px 15px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #eee; transition: background 0.2s; }
+.suggestions-list li:last-child { border-bottom: none; }
+.suggestions-list li:hover { background-color: #f4f4f4; }
+.hidden { display: none !important; }
+
 
 /* ------------------------------------- */
 /* PLOVOUCÍ PRVKY A VYHLEDÁVÁNÍ */
