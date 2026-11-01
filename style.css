@@ -17,12 +17,64 @@ button:focus, a:focus {
 body, html {
   margin: 0;
   padding: 0;
-  /* 100dvh je moderní způsob, jak vyřešit spodní lišty v mobilních prohlížečích */
   height: 100dvh; 
   font-family: 'Open Sans', sans-serif;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+/* ------------------------------------- */
+/* SYSTÉM ZÁLOŽEK (PŘEPÍNÁNÍ STRÁNEK) */
+/* ------------------------------------- */
+.page {
+  display: none; /* Skryje všechny stránky */
+  flex: 1;
+  width: 100%;
+  position: relative;
+}
+/* Zobrazí jen tu stránku, která má navíc třídu 'active' */
+.page.active {
+  display: block; 
+}
+
+/* ------------------------------------- */
+/* VZHLED STRÁNKY "ÚVOD" */
+/* ------------------------------------- */
+#page-uvod {
+  background-color: #ffffff;
+  overflow-y: auto;
+  padding: 50px 25px;
+}
+
+.content-container {
+  max-width: 750px;
+  margin: 0 auto; /* Vystředí text na PC */
+  font-size: 16px;
+  line-height: 1.7;
+  color: #333333;
+}
+
+.content-container h2 {
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 38px;
+  color: #0b1a30; /* Tmavě modrá z vašeho návrhu */
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+
+.content-container p {
+  margin-bottom: 22px;
+}
+
+/* Odkazy v textu podle vašeho návrhu */
+.content-container a {
+  color: #50b4e6; /* Světle modrá barva odkazů */
+  text-decoration: none;
+  font-weight: 600;
+}
+.content-container a:hover {
+  text-decoration: underline;
 }
 
 /* ------------------------------------- */
@@ -44,7 +96,7 @@ body, html {
   display: flex;
   align-items: center;
   gap: 15px;
-  flex-shrink: 0; /* Zabrání zmačkání loga na PC při menším okně */
+  flex-shrink: 0; 
 }
 
 .logo-icon {
@@ -124,40 +176,36 @@ body, html {
   
   .top-nav { display: none !important; }
   
-  /* Cílíme jen na první prvek, aby se odsadil od hodin na displeji telefonu */
   .leaflet-top .leaflet-control:first-child { 
     margin-top: calc(20px + env(safe-area-inset-top, 20px)) !important; 
   }
   .top-right-controls { top: calc(20px + env(safe-area-inset-top, 20px)) !important; }
   
+  #page-uvod { padding-top: calc(40px + env(safe-area-inset-top, 20px)); }
   .panel { width: 100%; left: -100%; top: 0; height: 100%; z-index: 2005; }
 }
 
 /* ------------------------------------- */
 /* MAPA A TLAČÍTKA S PŘESNÝMI ROZESTUPY */
 /* ------------------------------------- */
-#map-wrapper { flex: 1; position: relative; }
 #map { width: 100%; height: 100%; }
 .grayscale-tiles .leaflet-tile-pane {
   filter: grayscale(100%) contrast(1.1) opacity(0.8);
   transition: filter 0.5s ease;
 }
 
-/* Zrušení všech výchozích Leaflet okrajů a pozadí u neviditelných kontejnerů */
 .leaflet-bar { border: none !important; box-shadow: none !important; background: transparent !important; }
 
-/* TVRDÝ RESET MEZER: Zrušíme Leafletu jeho zdvojené mezery mezi skupinami tlačítek */
 .leaflet-left .leaflet-control {
   margin-left: 20px !important;
-  margin-bottom: 0 !important; /* Zruší spodní mezeru kontejneru */
-  margin-top: 0 !important; /* Zruší horní mezeru kontejneru */
+  margin-bottom: 0 !important; 
+  margin-top: 0 !important; 
 }
-/* Vrátíme mezeru JEN a pouze tomu úplně nejvyššímu tlačítku (+), aby nebylo nalepené na horní hranu */
+
 .leaflet-top .leaflet-control:first-child {
   margin-top: 20px !important;
 }
 
-/* JEDNOTNÝ STYL PRO KAŽDÉ TLAČÍTKO (+, -, vrstvy, poloha i případná nová) */
 .leaflet-bar a,
 .leaflet-touch .leaflet-bar a,
 .leaflet-touch .leaflet-bar a:first-child,
@@ -169,7 +217,7 @@ body, html {
   border: 1.5px solid var(--hlavni-okraj) !important;
   background-color: white !important;
   color: #000 !important;
-  margin: 0 0 12px 0 !important; /* TOTO JE JEDINÁ MEZERA (12px), funguje pro všechny stejně */
+  margin: 0 0 12px 0 !important; 
   box-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
   display: flex !important;
   justify-content: center !important;
@@ -223,7 +271,7 @@ body, html {
 .needs-cleaning { background-color: #e74c3c; border: 1.5px solid #922b21; border-radius: 50%; width: 14px; height: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 
 /* ------------------------------------- */
-/* BOČNÍ PANEL S DETAILY (Pro PC) */
+/* BOČNÍ PANEL S DETAILY */
 /* ------------------------------------- */
 .panel {
   position: absolute;
